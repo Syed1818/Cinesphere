@@ -80,7 +80,7 @@ export function Navbar() {
             </div>
             <div className="flex flex-col">
               <span className="font-display font-black text-xl tracking-tight text-white flex items-center">
-                Cine<span className="text-gradient-purple font-extrabold">Sphere</span>
+                Cine<span className="text-slate-100 font-extrabold">Sphere</span>
               </span>
               <span className="text-[10px] font-eyebrow text-indigo-400 font-semibold -mt-1 hidden sm:flex items-center space-x-1">
                 <Sparkles className="w-2.5 h-2.5 inline mr-0.5 text-indigo-400" />
@@ -155,7 +155,7 @@ export function Navbar() {
                     pathname === "/profile" ? "glass-pill-active" : ""
                   }`}
                 >
-                  <div className="w-6 h-6 rounded-full bg-gradient-to-tr from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold text-xs shadow-md">
+                  <div className="w-6 h-6 rounded-full bg-slate-800 border border-white/20 flex items-center justify-center text-white font-bold text-xs shadow-sm">
                     {user.display_name.charAt(0).toUpperCase()}
                   </div>
                   <span className="text-slate-200 text-xs font-semibold max-w-[100px] truncate hidden lg:inline-block">

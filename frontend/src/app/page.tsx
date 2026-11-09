@@ -442,17 +442,17 @@ export default function HomePage() {
             <div className="flex flex-wrap items-center gap-3 pt-2">
               <Link
                 href={`/movies/${currentMovie.id}`}
-                className="three-liquid-metal-btn h-11 sm:h-12 px-6 sm:px-7 rounded-full text-white font-bold text-sm flex items-center space-x-2.5 shadow-xl shadow-indigo-600/35 transition-all hover:scale-105 active:scale-95 group"
+                className="h-11 sm:h-12 px-6 sm:px-7 rounded-full bg-white text-slate-950 font-bold text-sm flex items-center space-x-2.5 shadow-xl shadow-white/10 hover:bg-slate-100 hover:scale-[1.02] active:scale-95 transition-all duration-150 group"
               >
-                <Play className="w-4 h-4 fill-white group-hover:scale-110 transition-transform" />
+                <Play className="w-4 h-4 fill-slate-950 text-slate-950 group-hover:scale-110 transition-transform" />
                 <span>Explore Movie</span>
               </Link>
               <WatchlistButton movieId={currentMovie.id} size="lg" />
               <Link
                 href="/movies"
-                className="h-11 sm:h-12 px-5 rounded-full glass-pill hover:glass-card text-slate-300 hover:text-white font-semibold text-sm transition-all hover:scale-105 active:scale-95 flex items-center space-x-2"
+                className="h-11 sm:h-12 px-5 rounded-full bg-white/10 hover:bg-white/15 text-white border border-white/15 backdrop-blur-md font-semibold text-sm transition-all hover:scale-[1.02] active:scale-95 flex items-center space-x-2"
               >
-                <Compass className="w-4 h-4 text-indigo-400" />
+                <Compass className="w-4 h-4 text-slate-300" />
                 <span>Browse All</span>
               </Link>
             </div>
@@ -477,13 +477,13 @@ export default function HomePage() {
                     {isCurrent && !prefersReducedMotion && (
                       <div
                         key={`progress-${activeSlide}`}
-                        className={`absolute inset-0 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-full animate-slide-progress ${
+                        className={`absolute inset-0 bg-white rounded-full animate-slide-progress shadow-[0_0_8px_rgba(255,255,255,0.8)] ${
                           isPaused ? "is-paused" : ""
                         }`}
                       />
                     )}
                     {isCurrent && prefersReducedMotion && (
-                      <div className="absolute inset-0 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full" />
+                      <div className="absolute inset-0 bg-white rounded-full" />
                     )}
                   </button>
                 );

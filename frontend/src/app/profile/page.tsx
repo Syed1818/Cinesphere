@@ -172,7 +172,7 @@ export default function ProfilePage() {
           <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-4 sm:space-y-0 sm:space-x-6">
             {/* Avatar Circle */}
             <div className="relative group">
-              <div className="w-24 h-24 rounded-3xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-purple-600 flex items-center justify-center text-white text-3xl font-black shadow-xl shadow-indigo-600/30 border-2 border-white/20 group-hover:scale-105 transition-transform duration-300">
+              <div className="w-24 h-24 rounded-3xl bg-slate-900 flex items-center justify-center text-white text-3xl font-black shadow-2xl border border-white/20 group-hover:scale-105 transition-transform duration-300">
                 {user.display_name.charAt(0).toUpperCase()}
               </div>
               {user.role === "ADMIN" && (
@@ -535,11 +535,11 @@ export default function ProfilePage() {
 
             <div className="space-y-2.5">
               {[
-                { name: "Science Fiction", score: 94, color: "from-indigo-500 to-cyan-500" },
-                { name: "Action & Adventure", score: 88, color: "from-cyan-500 to-blue-500" },
-                { name: "Drama & Suspense", score: 76, color: "from-purple-500 to-indigo-500" },
-                { name: "Thriller & Mystery", score: 71, color: "from-amber-500 to-rose-500" },
-                { name: "Crime & Heist", score: 58, color: "from-slate-500 to-indigo-500" },
+                { name: "Science Fiction", score: 94, color: "from-emerald-400 to-teal-500" },
+                { name: "Action & Adventure", score: 88, color: "from-sky-400 to-blue-500" },
+                { name: "Drama & Suspense", score: 76, color: "from-amber-400 to-orange-500" },
+                { name: "Thriller & Mystery", score: 71, color: "from-rose-400 to-pink-500" },
+                { name: "Crime & Heist", score: 58, color: "from-slate-200 to-slate-400" },
               ].map((item) => (
                 <div key={item.name} className="space-y-1">
                   <div className="flex items-center justify-between text-xs">

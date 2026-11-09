@@ -485,7 +485,7 @@ export default function AdminDashboardPage() {
 
             <button
               onClick={() => setShowAddMovieModal(true)}
-              className="px-4 py-2 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-bold text-xs flex items-center justify-center space-x-1.5 shadow-md"
+              className="px-4 py-2 rounded-xl bg-white hover:bg-slate-100 text-slate-950 font-bold text-xs flex items-center justify-center space-x-1.5 shadow-md active:scale-95 transition-all"
             >
               <Plus className="w-4 h-4" />
               <span>Add Film</span>
@@ -572,7 +572,7 @@ export default function AdminDashboardPage() {
                 {filteredUsers.map((u) => (
                   <tr key={u.id} className="hover:bg-white/[0.02] transition-colors">
                     <td className="py-3 px-4 font-bold text-white flex items-center space-x-2">
-                      <div className="w-7 h-7 rounded-xl bg-gradient-to-tr from-indigo-600 to-purple-600 flex items-center justify-center text-white text-xs font-bold">
+                      <div className="w-7 h-7 rounded-xl bg-slate-800 border border-white/10 flex items-center justify-center text-white text-xs font-bold">
                         {u.display_name.charAt(0).toUpperCase()}
                       </div>
                       <div>

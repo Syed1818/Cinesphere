@@ -238,7 +238,7 @@ export default function MovieDetailPage() {
                       unoptimized
                     />
                   ) : (
-                    <div className="w-full h-full flex items-center justify-center text-indigo-300 font-bold text-sm bg-gradient-to-tr from-indigo-900 to-purple-900">
+                    <div className="w-full h-full flex items-center justify-center text-slate-300 font-bold text-sm bg-slate-900 border border-white/10">
                       {c.name.charAt(0)}
                     </div>
                   )}
@@ -289,7 +289,7 @@ export default function MovieDetailPage() {
               <div key={rev.id} className="p-6 rounded-2xl glass-card space-y-3">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-3">
-                    <div className="w-9 h-9 rounded-full bg-gradient-to-tr from-indigo-600 to-purple-600 flex items-center justify-center text-xs font-bold text-white shadow-md">
+                    <div className="w-9 h-9 rounded-full bg-slate-800 border border-white/10 flex items-center justify-center text-xs font-bold text-white shadow-md">
                       {rev.user_display_name?.charAt(0).toUpperCase() || "U"}
                     </div>
                     <div>

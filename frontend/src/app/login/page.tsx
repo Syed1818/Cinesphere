@@ -47,7 +47,7 @@ export default function LoginPage() {
         <div className="absolute -top-24 -right-24 w-60 h-60 bg-indigo-500/15 rounded-full blur-3xl pointer-events-none" />
 
         <div className="text-center relative z-10">
-          <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-indigo-500 via-indigo-600 to-purple-600 flex items-center justify-center mx-auto text-white shadow-xl shadow-indigo-600/30 mb-5 group hover:scale-105 transition-transform duration-300">
+          <div className="w-14 h-14 rounded-2xl bg-slate-900 border border-white/20 flex items-center justify-center mx-auto text-white shadow-2xl mb-5 group hover:scale-105 transition-transform duration-300">
             <Film className="w-7 h-7" />
           </div>
           <h2 className="text-3xl font-black text-white font-display tracking-tight">

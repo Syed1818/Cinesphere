@@ -25,7 +25,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="dark bg-[#070a12]">
-      <body className="bg-transparent text-slate-100 min-h-screen flex flex-col antialiased selection:bg-indigo-500 selection:text-white relative overflow-x-hidden">
+      <body className="bg-transparent text-white min-h-screen flex flex-col antialiased selection:bg-indigo-600 selection:text-white relative overflow-x-hidden">
         {/* Custom Interactive GSAP Cursor & Radial Context Menu */}
         <CustomCursor />
         <CustomContextMenu />

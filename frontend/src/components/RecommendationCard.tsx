@@ -127,7 +127,7 @@ export function RecommendationCard({ movie }: RecommendationCardProps) {
       <div className="p-3.5 sm:p-4 flex flex-col flex-1 justify-between bg-slate-950/30 backdrop-blur-md">
         <div>
           <Link href={`/movies/${movie.id}`}>
-            <h3 className="font-display font-bold text-sm text-slate-100 group-hover:text-indigo-400 transition-colors line-clamp-1 mb-1.5">
+            <h3 className="font-display font-bold text-sm text-slate-200 group-hover:text-white transition-colors line-clamp-1 mb-1.5">
               {movie.title}
             </h3>
           </Link>

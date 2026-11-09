@@ -332,7 +332,7 @@ export function CustomContextMenu() {
           className="fixed bottom-8 left-1/2 -translate-x-1/2 z-[9999] pointer-events-none"
         >
           <div className="glass-card flex items-center space-x-3 px-5 py-2.5 rounded-full border border-white/20 shadow-2xl backdrop-blur-2xl bg-slate-950/70">
-            <span className="text-2xl animate-bounce">{reactionToast.emoji}</span>
+            <span className="text-2xl select-none inline-block">{reactionToast.emoji}</span>
             <div className="flex flex-col">
               <span className="text-xs font-black uppercase tracking-wider text-slate-400">
                 CineSphere Reaction

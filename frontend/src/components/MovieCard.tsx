@@ -111,7 +111,7 @@ export function MovieCard({ movie }: MovieCardProps) {
           </div>
 
           <Link href={`/movies/${movie.id}`}>
-            <h3 className="font-display font-bold text-sm text-slate-100 group-hover:text-indigo-400 transition-colors line-clamp-1 leading-snug">
+            <h3 className="font-display font-bold text-sm text-slate-200 group-hover:text-white transition-colors line-clamp-1 leading-snug">
               {movie.title}
             </h3>
           </Link>

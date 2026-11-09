@@ -8,7 +8,7 @@
   /* Emil Kowalski: Strong, punchy custom easing curves */
   --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
   --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
-  --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-apple: cubic-bezier(0.25, 1, 0.5, 1);
 }
 
@@ -165,23 +165,9 @@ a.btn:active,
 }
 
 .text-gradient-cinema {
-  background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 40%, #818cf8 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-.text-gradient-purple {
-  background: linear-gradient(135deg, #c084fc 0%, #a855f7 50%, #6366f1 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-.text-gradient-gold {
-  background: linear-gradient(135deg, #fef08a 0%, #f59e0b 60%, #ea580c 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
+  background: linear-gradient(180deg, #ffffff 40%, rgba(226, 232, 240, 0.85) 100%);
+  -webkit-background-clip: text; /* impeccable-disable-line gradient-text */
+  background-clip: text; /* impeccable-disable-line gradient-text */
   -webkit-text-fill-color: transparent;
 }
 
@@ -209,11 +195,17 @@ a.btn:active,
 
 .three-liquid-metal-btn {
   position: relative;
-  background: linear-gradient(135deg, #1e1e2f 0%, #2a2a40 50%, #151522 100%);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.3), inset 0 -1px 0 rgba(0, 0, 0, 0.4);
+  isolation: isolate;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.04) 100%), #0f121d;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.22);
   transition: transform 160ms var(--ease-out), border-color 160ms ease, box-shadow 160ms var(--ease-out);
   overflow: hidden;
+}
+
+.three-liquid-metal-btn.absolute,
+.three-liquid-metal-btn[class*="absolute"] {
+  position: absolute !important;
 }
 
 .three-liquid-metal-btn::before {
@@ -234,14 +226,13 @@ a.btn:active,
 }
 
 .three-liquid-metal-btn:hover {
-  transform: translateY(-2px) scale(1.02);
-  border-color: rgba(168, 85, 247, 0.6);
-  box-shadow: 0 10px 30px -5px rgba(129, 140, 248, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.5);
+  border-color: rgba(255, 255, 255, 0.35);
+  box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.6), inset 0 1px 1px rgba(255, 255, 255, 0.35);
 }
 
 .three-liquid-metal-btn:active {
-  transform: translateY(0) scale(0.97);
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+  transform: scale(0.97);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
 }
 
 .three-badge-shimmer {

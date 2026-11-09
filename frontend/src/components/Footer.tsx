@@ -16,7 +16,7 @@ export function Footer() {
         <div className="flex flex-col md:flex-row justify-between items-center space-y-6 md:space-y-0">
           <div className="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
             <Link href="/" className="flex items-center space-x-2.5 group select-none">
-              <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-indigo-500 via-indigo-600 to-purple-600 flex items-center justify-center text-white shadow-lg shadow-indigo-600/30 group-hover:scale-105 transition-transform duration-200">
+              <div className="w-8 h-8 rounded-xl bg-slate-900 border border-white/20 flex items-center justify-center text-white shadow-lg group-hover:scale-105 transition-transform duration-200">
                 <Film className="w-4 h-4" />
               </div>
               <span className="font-display font-black text-lg text-white tracking-tight">

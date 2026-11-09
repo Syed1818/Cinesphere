@@ -163,8 +163,8 @@ function MoviesCatalogContent() {
         </div>
 
         {/* Search Bar with Ergonomic Position & Focus */}
-        <form onSubmit={handleSearchSubmit} className="relative w-full md:max-w-md">
-          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
+        <form onSubmit={handleSearchSubmit} className="relative flex items-center w-full md:max-w-md">
+          <Search className="absolute left-3.5 w-4 h-4 text-slate-400 pointer-events-none" />
           <input
             type="text"
             placeholder="Search catalog by title, plot, keyword..."
@@ -172,22 +172,24 @@ function MoviesCatalogContent() {
             onChange={(e) => setSearchInput(e.target.value)}
             className="w-full h-11 pl-10 pr-24 glass-input rounded-full text-sm text-slate-100 placeholder-slate-400 focus:outline-none transition-colors"
           />
-          {searchInput && (
+          <div className="absolute right-1.5 inset-y-0 flex items-center gap-1.5 pointer-events-none">
+            {searchInput && (
+              <button
+                type="button"
+                onClick={handleClearSearch}
+                className="pointer-events-auto p-1.5 text-slate-400 hover:text-white transition-colors rounded-full hover:bg-white/10"
+                title="Clear search"
+              >
+                <X className="w-3.5 h-3.5" />
+              </button>
+            )}
             <button
-              type="button"
-              onClick={handleClearSearch}
-              className="absolute right-20 top-1/2 -translate-y-1/2 p-1 text-slate-400 hover:text-white transition-colors"
-              title="Clear search"
+              type="submit"
+              className="pointer-events-auto h-8 px-4 rounded-full bg-white text-slate-950 font-semibold text-xs shadow-md hover:bg-slate-100 active:scale-95 transition-all flex items-center justify-center cursor-pointer"
             >
-              <X className="w-3.5 h-3.5" />
+              Search
             </button>
-          )}
-          <button
-            type="submit"
-            className="absolute right-1.5 top-1/2 -translate-y-1/2 px-4 py-1.5 rounded-full three-liquid-metal-btn text-white text-xs font-bold shadow-md transition-all hover:scale-105 active:scale-95"
-          >
-            Search
-          </button>
+          </div>
         </form>
       </div>
 
