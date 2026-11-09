@@ -2,6 +2,15 @@
 
 import React, { useEffect, useRef, useState } from "react";
 
+type CursorState = "DEFAULT" | "MAGNETIC_BUTTON" | "CARD_HOVER" | "TEXT_INPUT";
+
+interface MagneticBounds {
+  centerX: number;
+  centerY: number;
+  width: number;
+  height: number;
+}
+
 export function CustomCursor() {
   const dotRef = useRef<HTMLDivElement>(null);
   const followerRef = useRef<HTMLDivElement>(null);
@@ -34,17 +43,27 @@ export function CustomCursor() {
 
     let hasPositionedFirstTime = false;
     let isVisible = false;
-    let isTextHovered = false;
     let isMouseDown = false;
+    let cursorState: CursorState = "DEFAULT";
 
-    // Dynamics & stretch
+    // Target elements and cached bounds to prevent layout thrashing
+    let activeMagneticEl: HTMLElement | null = null;
+    let magneticBounds: MagneticBounds | null = null;
+    let activeCardEl: HTMLElement | null = null;
+
+    // Dynamics, scaling & stretch
     let currentAngle = 0;
     let currentScaleX = 1;
     let currentScaleY = 1;
+    let baseFollowerScale = 1;
+    let baseDotScale = 1;
     let clickScale = 1;
     let targetClickScale = 1;
     let opacity = 0;
     let targetOpacity = 0;
+
+    // Style appearance cache
+    let currentThemeState = "";
 
     // RAF tracking
     let rafId: number | null = null;
@@ -53,34 +72,85 @@ export function CustomCursor() {
     // Linear interpolation helper
     const lerp = (start: number, end: number, factor: number) => start + (end - start) * factor;
 
+    const updateThemeStyles = () => {
+      if (currentThemeState === cursorState) return;
+      currentThemeState = cursorState;
+
+      if (cursorState === "MAGNETIC_BUTTON") {
+        follower.style.borderColor = "rgba(56, 189, 248, 0.95)";
+        follower.style.backgroundColor = "rgba(168, 85, 247, 0.22)";
+        follower.style.boxShadow = "0 0 25px rgba(56, 189, 248, 0.45), 0 0 10px rgba(168, 85, 247, 0.35)";
+      } else if (cursorState === "CARD_HOVER") {
+        follower.style.borderColor = "rgba(168, 85, 247, 0.75)";
+        follower.style.backgroundColor = "rgba(99, 102, 241, 0.2)";
+        follower.style.boxShadow = "0 0 30px rgba(99, 102, 241, 0.45)";
+      } else {
+        // DEFAULT
+        follower.style.borderColor = "rgba(129, 140, 248, 0.8)";
+        follower.style.backgroundColor = "rgba(99, 102, 241, 0.1)";
+        follower.style.boxShadow = "0 0 20px rgba(99, 102, 241, 0.35)";
+      }
+    };
+
     const updateDOM = () => {
-      // Direct GPU transform manipulation for 120 FPS vsync
-      dot.style.transform = `translate3d(${dotX}px, ${dotY}px, 0) translate(-50%, -50%) scale(${isMouseDown ? 1.3 : 1})`;
+      // GPU-accelerated transforms (120 FPS vsync)
+      const finalDotScale = baseDotScale * (isMouseDown ? 1.3 : 1);
+      dot.style.transform = `translate3d(${dotX}px, ${dotY}px, 0) translate(-50%, -50%) scale(${finalDotScale.toFixed(3)})`;
       dot.style.opacity = `${opacity.toFixed(3)}`;
 
-      follower.style.transform = `translate3d(${followerX}px, ${followerY}px, 0) translate(-50%, -50%) rotate(${currentAngle.toFixed(2)}deg) scale(${(currentScaleX * clickScale).toFixed(3)}, ${(currentScaleY * clickScale).toFixed(3)})`;
+      const finalScaleX = baseFollowerScale * currentScaleX * clickScale;
+      const finalScaleY = baseFollowerScale * currentScaleY * clickScale;
+      follower.style.transform = `translate3d(${followerX}px, ${followerY}px, 0) translate(-50%, -50%) rotate(${currentAngle.toFixed(2)}deg) scale(${finalScaleX.toFixed(3)}, ${finalScaleY.toFixed(3)})`;
       follower.style.opacity = `${opacity.toFixed(3)}`;
+
+      updateThemeStyles();
     };
 
     const render = () => {
-      // 1. Lerp dot position (immediate response, factor = 0.45)
+      // 1. Determine targets based on current interaction state
+      let targetFollowerX = mouseX;
+      let targetFollowerY = mouseY;
+      let targetFollowerScale = 1;
+      let targetDotScale = 1;
+
+      if (cursorState === "MAGNETIC_BUTTON" && magneticBounds) {
+        // Magnetic gravity: snap strongly toward center, retaining subtle mouse offset
+        targetFollowerX = magneticBounds.centerX + (mouseX - magneticBounds.centerX) * 0.2;
+        targetFollowerY = magneticBounds.centerY + (mouseY - magneticBounds.centerY) * 0.2;
+        targetFollowerScale = 1.8;
+        targetDotScale = 0.75;
+      } else if (cursorState === "CARD_HOVER") {
+        targetFollowerScale = 2.4;
+        targetDotScale = 0.5;
+      } else {
+        // DEFAULT
+        targetFollowerScale = 1;
+        targetDotScale = 1;
+      }
+
+      // 2. Lerp dot position (immediate response, factor = 0.45)
       const dotFactor = prefersReducedMotion ? 1 : 0.45;
       dotX = lerp(dotX, mouseX, dotFactor);
       dotY = lerp(dotY, mouseY, dotFactor);
 
-      // 2. Lerp follower position (spring-damped trailing, factor = 0.15)
+      // 3. Lerp follower position (spring-damped trailing, factor = 0.15)
       const prevFollowerX = followerX;
       const prevFollowerY = followerY;
       const followerFactor = prefersReducedMotion ? 1 : 0.15;
-      followerX = lerp(followerX, mouseX, followerFactor);
-      followerY = lerp(followerY, mouseY, followerFactor);
+      followerX = lerp(followerX, targetFollowerX, followerFactor);
+      followerY = lerp(followerY, targetFollowerY, followerFactor);
 
-      // 3. Velocity and organic squash/stretch
+      // 4. Follower and dot scale interpolation
+      baseFollowerScale = lerp(baseFollowerScale, targetFollowerScale, 0.2);
+      baseDotScale = lerp(baseDotScale, targetDotScale, 0.22);
+      clickScale = lerp(clickScale, targetClickScale, 0.25);
+
+      // 5. Velocity and organic squash/stretch (applied when not magnetically locked)
       const deltaX = followerX - prevFollowerX;
       const deltaY = followerY - prevFollowerY;
       const speed = Math.hypot(deltaX, deltaY);
 
-      if (!prefersReducedMotion && speed > 0.15) {
+      if (!prefersReducedMotion && cursorState === "DEFAULT" && speed > 0.15) {
         currentAngle = Math.atan2(deltaY, deltaX) * (180 / Math.PI);
         const targetScaleX = 1 + Math.min(speed * 0.035, 0.45);
         const targetScaleY = 1 / (1 + (targetScaleX - 1) * 0.6);
@@ -91,10 +161,7 @@ export function CustomCursor() {
         currentScaleY = lerp(currentScaleY, 1, 0.18);
       }
 
-      // 4. Click scale lerp
-      clickScale = lerp(clickScale, targetClickScale, 0.25);
-
-      // 5. Opacity lerp (smooth fade in/out)
+      // 6. Opacity lerp (smooth fade in/out)
       opacity = lerp(opacity, targetOpacity, 0.18);
       if (Math.abs(targetOpacity - opacity) < 0.005) {
         opacity = targetOpacity;
@@ -102,7 +169,7 @@ export function CustomCursor() {
 
       updateDOM();
 
-      // 6. Loop management: if fully hidden and settled, suspend RAF to conserve CPU
+      // 7. Loop management: if fully hidden and settled, suspend RAF to conserve CPU
       if (targetOpacity === 0 && opacity === 0) {
         isRafRunning = false;
         rafId = null;
@@ -120,7 +187,7 @@ export function CustomCursor() {
     };
 
     const showCursor = () => {
-      if (!isVisible && !isTextHovered) {
+      if (!isVisible && cursorState !== "TEXT_INPUT") {
         isVisible = true;
         document.documentElement.classList.add("has-custom-cursor");
         targetOpacity = 1;
@@ -148,7 +215,7 @@ export function CustomCursor() {
         followerY = mouseY;
       }
 
-      if (!isTextHovered) {
+      if (cursorState !== "TEXT_INPUT") {
         targetOpacity = 1;
         if (!isVisible) {
           isVisible = true;
@@ -160,14 +227,14 @@ export function CustomCursor() {
     };
 
     const onMouseDown = () => {
-      if (isTextHovered) return;
+      if (cursorState === "TEXT_INPUT") return;
       isMouseDown = true;
       targetClickScale = 0.8;
       startRaf();
     };
 
     const onMouseUp = () => {
-      if (isTextHovered) return;
+      if (cursorState === "TEXT_INPUT") return;
       isMouseDown = false;
       targetClickScale = 1;
       startRaf();
@@ -177,17 +244,108 @@ export function CustomCursor() {
       const target = e.target as HTMLElement | null;
       if (!target) return;
 
+      // 1. Text input detection: instant collapse and native cursor restore
       const isInput = target.closest("input, textarea, select, [contenteditable='true']");
       if (isInput) {
-        isTextHovered = true;
+        cursorState = "TEXT_INPUT";
+        activeMagneticEl = null;
+        magneticBounds = null;
+        activeCardEl = null;
         targetOpacity = 0;
         document.documentElement.classList.remove("has-custom-cursor");
         return;
-      } else if (isTextHovered) {
-        isTextHovered = false;
-        targetOpacity = 1;
+      }
+
+      // Re-enable custom cursor if departing a text field
+      if (cursorState === "TEXT_INPUT") {
         document.documentElement.classList.add("has-custom-cursor");
+        targetOpacity = 1;
+      }
+
+      // 2. Magnetic button detection (buttons take precedence over cards)
+      const buttonEl = target.closest<HTMLElement>(
+        "button, a, [role='button'], .magnetic-target, .three-liquid-metal-btn, .glass-pill"
+      );
+      if (buttonEl) {
+        cursorState = "MAGNETIC_BUTTON";
+        activeMagneticEl = buttonEl;
+        const rect = buttonEl.getBoundingClientRect();
+        magneticBounds = {
+          centerX: rect.left + rect.width / 2,
+          centerY: rect.top + rect.height / 2,
+          width: rect.width,
+          height: rect.height,
+        };
         startRaf();
+        return;
+      }
+
+      // 3. Card hover detection
+      const cardEl = target.closest<HTMLElement>(
+        ".glass-card-hover, [data-card='true'], .three-glow-box"
+      );
+      if (cardEl) {
+        cursorState = "CARD_HOVER";
+        activeCardEl = cardEl;
+        activeMagneticEl = null;
+        magneticBounds = null;
+        startRaf();
+        return;
+      }
+
+      // 4. Default pointer state
+      cursorState = "DEFAULT";
+      activeMagneticEl = null;
+      magneticBounds = null;
+      activeCardEl = null;
+      startRaf();
+    };
+
+    const onMouseOut = (e: MouseEvent) => {
+      const target = e.target as HTMLElement | null;
+      if (!target) return;
+
+      const related = e.relatedTarget as HTMLElement | null;
+
+      // Handle departing magnetic buttons
+      if (activeMagneticEl && (!related || !activeMagneticEl.contains(related))) {
+        activeMagneticEl = null;
+        magneticBounds = null;
+        if (cursorState === "MAGNETIC_BUTTON") {
+          cursorState = "DEFAULT";
+        }
+      }
+
+      // Handle departing card hovers
+      if (activeCardEl && (!related || !activeCardEl.contains(related))) {
+        activeCardEl = null;
+        if (cursorState === "CARD_HOVER") {
+          cursorState = "DEFAULT";
+        }
+      }
+
+      // Handle departing text inputs
+      if (cursorState === "TEXT_INPUT") {
+        const inputEl = target.closest("input, textarea, select, [contenteditable='true']");
+        if (inputEl && (!related || !inputEl.contains(related))) {
+          cursorState = "DEFAULT";
+          targetOpacity = 1;
+          document.documentElement.classList.add("has-custom-cursor");
+          startRaf();
+        }
+      }
+    };
+
+    const onScroll = () => {
+      // Keep cached magnetic bounds synced on scroll without re-querying every mousemove
+      if (activeMagneticEl) {
+        const rect = activeMagneticEl.getBoundingClientRect();
+        magneticBounds = {
+          centerX: rect.left + rect.width / 2,
+          centerY: rect.top + rect.height / 2,
+          width: rect.width,
+          height: rect.height,
+        };
       }
     };
 
@@ -199,15 +357,22 @@ export function CustomCursor() {
     };
 
     const onMouseEnterDoc = () => {
-      if (!isTextHovered) {
+      if (cursorState !== "TEXT_INPUT") {
         showCursor();
       }
+    };
+
+    const onWindowBlur = () => {
+      hideCursor();
     };
 
     window.addEventListener("mousemove", onMouseMove, { passive: true });
     window.addEventListener("mousedown", onMouseDown, { passive: true });
     window.addEventListener("mouseup", onMouseUp, { passive: true });
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("blur", onWindowBlur);
     document.addEventListener("mouseover", onMouseOver, { passive: true });
+    document.addEventListener("mouseout", onMouseOut, { passive: true });
     document.addEventListener("mouseleave", onMouseLeaveDoc);
     document.addEventListener("mouseenter", onMouseEnterDoc);
 
@@ -217,7 +382,10 @@ export function CustomCursor() {
       window.removeEventListener("mousemove", onMouseMove);
       window.removeEventListener("mousedown", onMouseDown);
       window.removeEventListener("mouseup", onMouseUp);
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("blur", onWindowBlur);
       document.removeEventListener("mouseover", onMouseOver);
+      document.removeEventListener("mouseout", onMouseOut);
       document.removeEventListener("mouseleave", onMouseLeaveDoc);
       document.removeEventListener("mouseenter", onMouseEnterDoc);
     };
@@ -227,10 +395,10 @@ export function CustomCursor() {
 
   return (
     <>
-      {/* Outer Follower Ring - Sleek semi-translucent indigo/cyan ring */}
+      {/* Outer Follower Ring - Adaptive morphing frame with hardware-accelerated transitions */}
       <div
         ref={followerRef}
-        className="fixed top-0 left-0 w-10 h-10 rounded-full pointer-events-none z-[999999] border border-indigo-400/80 bg-indigo-500/10 shadow-[0_0_20px_rgba(99,102,241,0.35)] will-change-transform"
+        className="fixed top-0 left-0 w-10 h-10 rounded-full pointer-events-none z-[999999] border border-indigo-400/80 bg-indigo-500/10 shadow-[0_0_20px_rgba(99,102,241,0.35)] will-change-transform transition-[border-color,background-color,box-shadow] duration-200 ease-out"
         aria-hidden="true"
       />
 

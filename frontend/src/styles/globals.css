@@ -220,20 +220,25 @@ body {
 /* CUSTOM CURSOR & ACCESSIBILITY                                              */
 /* -------------------------------------------------------------------------- */
 
-/* Hide standard cursor ONLY when CustomCursor component is actively running */
+/* Hide standard cursor across interactive elements when custom cursor is active */
 html.has-custom-cursor,
 html.has-custom-cursor body,
 html.has-custom-cursor a,
 html.has-custom-cursor button,
 html.has-custom-cursor [role="button"],
-html.has-custom-cursor .clickable {
+html.has-custom-cursor .clickable,
+html.has-custom-cursor .magnetic-target,
+html.has-custom-cursor .glass-card-hover,
+html.has-custom-cursor [data-card="true"],
+html.has-custom-cursor label {
   cursor: none !important;
 }
 
-/* Always preserve standard text editing caret for inputs and dropdowns */
+/* Strictly preserve standard native text caret on all input fields, textareas, and select menus */
 html.has-custom-cursor input,
 html.has-custom-cursor textarea,
-html.has-custom-cursor select {
+html.has-custom-cursor select,
+html.has-custom-cursor [contenteditable="true"] {
   cursor: text !important;
 }
 
