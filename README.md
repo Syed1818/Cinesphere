@@ -6,22 +6,28 @@ An enterprise-grade, full-stack movie recommendation platform built with **Next.
 
 ## Architecture Highlights
 
+* **Next-Gen Motion System & Adaptive Custom Cursor:**
+  * **Continuous RAF Linear Interpolation (`lerp`)**: Custom cursor operates on a high-precision `requestAnimationFrame` lerp loop decoupling the precision central dot (`lerp factor = 0.45`) from the trailing follower ring (`lerp factor = 0.15`) for fluid, organic 120 FPS tracking.
+  * **Velocity-Based Stretch & Squash**: Real-time velocity vector calculation ($\Delta x, \Delta y$) dynamically elongates the follower along the movement angle ($\theta = \text{atan2}(\Delta y, \Delta x)$) when accelerating and smoothly relaxes into a circle when resting.
+  * **4 Context-Aware Morphing States**:
+    * `DEFAULT`: Translucent indigo/cyan ring (`w-10 h-10 border border-indigo-400/80 bg-indigo-500/10`) with luminous white core dot.
+    * `MAGNETIC_BUTTON`: Magnetically snaps to button centers (`button, a, [role='button'], .magnetic-target`) and morphs into a vibrant cyan/violet glowing frame (`scale: 1.8`).
+    * `CARD_HOVER`: Expands into an ambient glowing focal aura (`scale: 2.4`) over movie cards with dot scaled down to prevent visual obstruction.
+    * `TEXT_INPUT`: Instantly collapses custom cursor (`opacity: 0`) over inputs, textareas, and dropdowns, preserving 100% native OS text carets.
+  * **Inertia-Dampened 3D Card Physics (`ThreeCard3D`)**: Re-engineered with continuous RAF lerp tilt (`lerp factor = 0.1`), exponential decay spring return, and holographic specular light reflection sheen with `overlay` blend mode.
+  * **Fluid Marquee Dynamics & Ken Burns Hero Slideshow**: Graceful hover deceleration on 3 infinite background drifting rows, animated 5.5s linear timer progress pill with pause-on-hover/tab-away, keyboard arrow navigation (`ArrowLeft` / `ArrowRight`), and cinematic slow-zoom crossfades.
+* **100% Real High-Resolution TMDB Artwork (131/131 Verified):**
+  * Fully synchronized with the official TMDB CDN (`image.tmdb.org/t/p/w500` posters and `image.tmdb.org/t/p/original` backdrops).
+  * **131 of 131 catalog movies** verified with `HTTP 200 OK` on TMDB CDN, permanently updated in PostgreSQL and seed datasets (`movies_dataset_expanded.py` & `seed.py`).
 * **ThreeUI (threeui.com) 3D & WebGL Cinematic Revamp:**
   * **Interactive WebGL Atmospheric Shaders:** Integrates official `@designcodeio/threeui` shaders (`FluidFieldBackground`, `NebulaBackground`, `WarpFieldBackground`, `EmberStorm`, `LiquidFormBackground`) with an interactive on-screen floating atmosphere switcher.
   * **Completely Transparent Glassmorphic System:** Fully transparent UI canvas architecture (`rgba(15, 23, 42, 0.2)` cards, `rgba(9, 13, 24, 0.35)` dock and navigation with 24px blur) letting the 3D WebGL atmospheric shaders and background marquee shine through with crystal clarity.
-  * **GSAP Precision Custom Cursor:** High-performance dual-ring cursor operating at 120fps with `gsap.quickTo` (inner precision dot + outer spring follower ring), magnetic interactive expansion (`scale: 2.2` with purple glowing aura) over interactive elements, click contraction (`scale: 0.75`), and touch-device guard.
   * **Custom Right-Click Radial Emoji Wheel (`CustomContextMenu`):** Intercepts right-click to reveal an interactive 8-petal radial reaction wheel (🍿, 🔥, ❤️, 🤯, ⭐, 🚀, 😭, 👏) with dynamic center hub feedback and quick cinema navigation shortcuts (Home, Movies, Watchlists, Reload).
   * **GSAP Emoji Particle Explosion:** Selecting any reaction emoji triggers a GPU-accelerated confetti burst of 36 floating animated emoji particles with physics velocity, upward drift, rotation, and an expanding shockwave ring, accompanied by a celebration toast pill.
   * **GSAP Stagger Entrance Animations (`GsapStagger`):** Silky-smooth GPU-accelerated entrance animations across all movie shelves, catalog grids, and recommendations utilizing `gsap.context()` with automatic inline transform clearance (`clearProps`) preserving 3D card tilt.
-  * **3D Perspective Card Tilt (`ThreeCard3D`):** Smooth cursor-tracking 3D tilt with dynamic radial specular reflections on all movie cards, recommendation cards, and KPI panels.
   * **Liquid Metal & Mercury Buttons:** Custom `.three-liquid-metal-btn` interactive chrome actions with metallic sheen and specular highlights for high-priority CTAs.
   * **Holographic Badges & ThreeUI Dock:** Animated shimmer badges (`.three-badge-shimmer`), iridescent highlights, and `.three-dock` floating top navigation.
   * **Geometric Cinema Favicon:** Vector SVG favicon (`/favicon.svg` and `/icon.svg`) featuring a geometric aperture reel with glowing diamond sparkle and gradient squircle.
-* **Glassmorphic UI & Cinematic Design System:**
-  * **Dynamic Background Slideshow & Carousel:** Features an ambient multi-row infinite drifting marquee poster carousel across the background and an interactive auto-advancing Hero Spotlight Slideshow cycling through top movies every 5.5 seconds with backdrop crossfade, progress pills, play/pause controls, and thumbnail selectors.
-  * **Ultra-Refined Glassmorphism:** Implements translucent glass cards (`.glass-card`, `.glass-card-hover`), specular top borders, ambient floating glow orbs (`float-slow`, `float-reverse`), and radial mesh background.
-  * **Zero Broken Images Guaranteed:** Graceful fallback artwork system in `MovieCard` and `RecommendationCard` renders genre-colored radial gradients and stylized typography whenever TMDB images fail to load.
-  * **Interactive Micro-Animations:** Glowing 1–10 star hover scaling, card lift on hover (`-translate-y-1`), and smooth pill transitions.
 * **Dedicated User Profile & Admin Management:**
   * **User Profile Page (`/profile`):** KPI statistics (rated count, average rating, watchlists), profile bio editor, ratings & reviews management with 1-click deletion, active watchlists, and interactive AI taste breakdown.
   * **Admin Console (`/admin` & `/admin/login`):** Role-gated administration hub with 6 platform KPIs, interactive movie catalog manager (add/delete titles), user role switcher (`USER`, `CRITIC`, `MODERATOR`, `ADMIN`), review moderation table, and 1-click **Retrain ML Engine** button.
@@ -32,7 +38,7 @@ An enterprise-grade, full-stack movie recommendation platform built with **Next.
   * **Learned Item-to-Item Similarity:** Evaluates similar movies directly in the model's learned representation space for "More Like This" discovery.
 * **130+ Iconic Curated Movie Catalog:**
   * Expanded dataset featuring **131 iconic movies** spanning cinema history from 1942 to 2024 across 19 genres (Action, Sci-Fi, Drama, Animation, Crime, Thriller, Western, Horror, Comedy, Romance, etc.).
-  * Complete metadata with TMDB IDs, IMDb IDs, directors, full cast ensembles, runtimes, popularity scores, and posters.
+  * Complete metadata with TMDB IDs, IMDb IDs, directors, full cast ensembles, runtimes, popularity scores, and verified posters.
 * **Full-Featured Catalog & Bidirectional Sorting:**
   * **Bidirectional Sorting:** Most Popular, Least Popular, Highest Rated, Lowest Rated, Newest Releases, Oldest Releases, Title (A-Z), and Title (Z-A).
   * **Multi-Faceted Filtering:** Instant genre filtering across 19 genres with URL synchronization, keyword search, active filter pills, and 1-click filter reset.
@@ -56,18 +62,22 @@ movie-rec/
 │   │   ├── schemas/          # Pydantic v2 DTO validation schemas
 │   │   ├── services/         # Custom ML Recommender, movie catalog service, TMDB client
 │   │   ├── seed.py           # Seed script populating 131 iconic movies, cast, genres & users
-│   │   ├── movies_dataset_expanded.py # Curated dataset of 119 diverse movies
+│   │   ├── movies_dataset_expanded.py # Curated dataset of 119 diverse movies with verified TMDB artwork
 │   │   └── main.py           # FastAPI entrypoint with CORS, middlewares & exception handlers
 │   └── requirements.txt
 │
 ├── frontend/                 # Next.js 15 + React 19 + TypeScript + TailwindCSS
 │   ├── src/
 │   │   ├── app/              # App Router: Home, Login, Signup, Movies, Detail, Recommendations, Watchlists
-│   │   ├── components/       # Reusable UI: Navbar, MovieCard, StarRating, RecommendationCard, etc.
+│   │   ├── components/       # Reusable UI: CustomCursor, ThreeCard3D, MovieCard, CustomContextMenu, etc.
 │   │   ├── context/          # React AuthContext (JWT session management)
-│   │   ├── lib/              # Strongly-typed API client & TypeScript interfaces
-│   │   └── styles/           # TailwindCSS cinema theme
+│   │   ├── lib/              # Strongly-typed API client, movieArtwork & TypeScript interfaces
+│   │   └── styles/           # TailwindCSS cinema theme, 3D transforms & marquee animations
 │   └── package.json
+│
+├── scripts/                  # Operational & Synchronization Utilities
+│   ├── sync_real_movie_images.py      # Automated TMDB CDN artwork fetcher & database updater
+│   └── update_seed_dataset_artwork.py # Permanent dataset synchronizer
 │
 ├── setup_database.sql        # Turnkey SQL DDL script ready for pgAdmin 4 Query Tool
 ├── servers.json              # Pre-configured server connections for pgAdmin 4
@@ -90,14 +100,19 @@ movie-rec/
 
 ---
 
-### 2. Seed Database with 130+ Movies & Recommendations
+### 2. Seed Database with 130+ Movies & Real Artwork
 
-Populate 131 iconic movies, 19 genres, 560+ credits, 370+ people, and the demo user profile (`demo@movierec.com` / `password123`):
+Populate 131 iconic movies with authentic TMDB artwork, 19 genres, 560+ credits, 370+ people, and the demo user profile (`demo@movierec.com` / `password123`):
 
 ```bash
 cd backend
 .\venv\Scripts\activate
 python -m app.seed
+```
+
+To re-sync or verify TMDB CDN artwork at any time:
+```bash
+python scripts/sync_real_movie_images.py
 ```
 
 ---
@@ -136,7 +151,7 @@ cd backend
 pytest -v
 ```
 
-*(Runs all 16 automated tests covering API endpoints, database transactions, ML convergence, and security).*
+*(Runs all automated tests covering API endpoints, database transactions, live DB flows, ML convergence, and security).*
 
 ---
 
