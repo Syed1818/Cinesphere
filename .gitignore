@@ -31,6 +31,9 @@ browser_*.png
 test_screen.png
 screenshot.png
 *.tmp
+# Logs
+logs/
+backend/logs/
 *.log
 frontend/dom_test.html
 
