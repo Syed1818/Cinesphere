@@ -31,6 +31,14 @@ export function ThreeCard3D({
   const currentScale = useRef<number>(1);
   const targetScale = useRef<number>(1);
 
+  // Holographic specular light sheen coordinates & opacity
+  const currentGlareX = useRef<number>(50);
+  const currentGlareY = useRef<number>(50);
+  const targetGlareX = useRef<number>(50);
+  const targetGlareY = useRef<number>(50);
+  const currentGlareOpacity = useRef<number>(0);
+  const targetGlareOpacity = useRef<number>(0);
+
   const isHoveredRef = useRef<boolean>(false);
   const prefersReducedMotionRef = useRef<boolean>(false);
 
@@ -47,6 +55,7 @@ export function ThreeCard3D({
       const LERP_FACTOR = 0.1;
       const EPSILON = 0.005;
 
+      // Inertia dampening on rotational tilt & scale
       currentRotateX.current +=
         (targetRotateX.current - currentRotateX.current) * LERP_FACTOR;
       currentRotateY.current +=
@@ -54,6 +63,15 @@ export function ThreeCard3D({
       currentScale.current +=
         (targetScale.current - currentScale.current) * LERP_FACTOR;
 
+      // Holographic glare coordinate & opacity interpolation
+      currentGlareX.current +=
+        (targetGlareX.current - currentGlareX.current) * LERP_FACTOR;
+      currentGlareY.current +=
+        (targetGlareY.current - currentGlareY.current) * LERP_FACTOR;
+      currentGlareOpacity.current +=
+        (targetGlareOpacity.current - currentGlareOpacity.current) * LERP_FACTOR;
+
+      // Apply 3D transform without CSS transition conflict
       if (cardRef.current) {
         cardRef.current.style.transform = `perspective(1000px) rotateX(${currentRotateX.current.toFixed(
           3
@@ -64,24 +82,46 @@ export function ThreeCard3D({
         )}, ${currentScale.current.toFixed(4)}, ${currentScale.current.toFixed(4)})`;
       }
 
+      // Apply holographic specular sheen
+      if (glareRef.current) {
+        if (currentGlareOpacity.current > 0.005) {
+          glareRef.current.style.opacity = currentGlareOpacity.current.toFixed(3);
+          glareRef.current.style.background = `radial-gradient(circle 350px at ${currentGlareX.current.toFixed(
+            1
+          )}% ${currentGlareY.current.toFixed(
+            1
+          )}%, rgba(255, 255, 255, 0.22) 0%, rgba(129, 140, 248, 0.12) 30%, transparent 70%)`;
+        } else if (parseFloat(glareRef.current.style.opacity || "0") > 0) {
+          glareRef.current.style.opacity = "0";
+        }
+      }
+
       const diffX = Math.abs(targetRotateX.current - currentRotateX.current);
       const diffY = Math.abs(targetRotateY.current - currentRotateY.current);
       const diffScale = Math.abs(targetScale.current - currentScale.current);
+      const diffGlare = Math.abs(
+        targetGlareOpacity.current - currentGlareOpacity.current
+      );
 
       const isResting =
         !isHoveredRef.current &&
         diffX < EPSILON &&
         diffY < EPSILON &&
-        diffScale < EPSILON;
+        diffScale < EPSILON &&
+        diffGlare < EPSILON;
 
       if (isResting) {
         currentRotateX.current = 0;
         currentRotateY.current = 0;
         currentScale.current = 1;
+        currentGlareOpacity.current = 0;
         if (cardRef.current) {
           cardRef.current.style.transform =
             "perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)";
           cardRef.current.style.willChange = "auto";
+        }
+        if (glareRef.current) {
+          glareRef.current.style.opacity = "0";
         }
         rafIdRef.current = null;
       } else {
@@ -115,6 +155,8 @@ export function ThreeCard3D({
         targetRotateY.current = 0;
         currentScale.current = 1;
         targetScale.current = 1;
+        currentGlareOpacity.current = 0;
+        targetGlareOpacity.current = 0;
         if (cardRef.current) {
           cardRef.current.style.transform =
             "perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)";
@@ -152,6 +194,7 @@ export function ThreeCard3D({
     rectRef.current = cardRef.current.getBoundingClientRect();
     isHoveredRef.current = true;
     targetScale.current = scale;
+    targetGlareOpacity.current = glareOpacity;
     cardRef.current.style.willChange = "transform";
     startLoop();
   };
@@ -171,14 +214,9 @@ export function ThreeCard3D({
     targetRotateX.current = (y - 0.5) * -2 * maxTilt;
     targetRotateY.current = (x - 0.5) * 2 * maxTilt;
 
-    if (glareRef.current) {
-      glareRef.current.style.opacity = `${glareOpacity}`;
-      glareRef.current.style.background = `radial-gradient(circle 320px at ${(
-        x * 100
-      ).toFixed(1)}% ${(y * 100).toFixed(
-        1
-      )}%, rgba(255, 255, 255, 0.28) 0%, rgba(99, 102, 241, 0.15) 35%, transparent 75%)`;
-    }
+    targetGlareX.current = x * 100;
+    targetGlareY.current = y * 100;
+    targetGlareOpacity.current = glareOpacity;
 
     startLoop();
   };
@@ -189,10 +227,9 @@ export function ThreeCard3D({
     targetRotateX.current = 0;
     targetRotateY.current = 0;
     targetScale.current = 1;
-
-    if (glareRef.current) {
-      glareRef.current.style.opacity = "0";
-    }
+    targetGlareOpacity.current = 0;
+    targetGlareX.current = 50;
+    targetGlareY.current = 50;
 
     startLoop();
   };
@@ -200,6 +237,7 @@ export function ThreeCard3D({
   return (
     <div
       ref={cardRef}
+      data-card="true"
       onMouseMove={handleMouseMove}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
@@ -211,10 +249,10 @@ export function ThreeCard3D({
     >
       {children}
 
-      {/* Specular Glare Overlay */}
+      {/* Holographic Specular Glare Overlay */}
       <div
         ref={glareRef}
-        className="pointer-events-none absolute inset-0 rounded-[inherit] overflow-hidden transition-opacity duration-300 opacity-0"
+        className="pointer-events-none absolute inset-0 rounded-[inherit] overflow-hidden opacity-0"
         style={{
           mixBlendMode: "overlay",
         }}

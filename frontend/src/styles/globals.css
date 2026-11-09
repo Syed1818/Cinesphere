@@ -243,6 +243,27 @@ html.has-custom-cursor [contenteditable="true"] {
 }
 
 /* -------------------------------------------------------------------------- */
+/* 3D PERSPECTIVE & CARD SYSTEM                                               */
+/* -------------------------------------------------------------------------- */
+
+[data-card="true"] {
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+[data-card="true"] .glass-card-hover:hover {
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-card="true"] {
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
+/* -------------------------------------------------------------------------- */
 /* KEYFRAME ANIMATIONS & GLOWS                                                */
 /* -------------------------------------------------------------------------- */
 
