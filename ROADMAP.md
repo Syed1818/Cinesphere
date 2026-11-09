@@ -1,81 +1,78 @@
----
-milestone: CineSphere v1.0.0 Production Release & Scale
-version: 1.0.0
-updated: 2026-11-09T22:30:00Z
----
+# CineSphere: Full-Stack Engineering Roadmap
 
-# ROADMAP.md — Phased Implementation Roadmap
-
-> **Current Phase:** Phase 5 (Production Hardening & Verification) — **COMPLETE**  
-> **Next Milestone:** Phase 6 (Watch Parties & Real-Time WebSockets)  
-> **Status:** ✅ Core Platform Production Ready | 16/16 Tests Passing | 13/13 Routes Verified  
+**Architecture:** Next.js 15 (React 19, App Router) + FastAPI + PostgreSQL 18 with `pgvector` + WebGL/ThreeUI + GSAP  
+**Execution Paradigm:** Host-Native Windows (PowerShell, Native Python 3.12, Node.js v22). **No Docker, No Redis.**
 
 ---
 
-## 1. Must-Haves (from SPEC.md)
+## 1. Roadmap Overview & Timeline
 
-- [x] Native PostgreSQL 18 schema with 14 tables, `pgvector`, and `uuid-ossp` extensions.
-- [x] Zero-Docker, zero-Redis host-native runtime with thread-safe bounded in-memory TTL caching.
-- [x] JWT Authentication (Argon2id/bcrypt passwords, access and refresh tokens, RBAC roles).
-- [x] Dual-paradigm recommendation system: Custom SGD Factorized Feature model + ALS collaborative filtering.
-- [x] Offline RecSys evaluation framework (NDCG@10, Precision@10, Recall@10, MRR, ILD).
-- [x] Modern Next.js 15 App Router frontend with React 19 Client/Server architecture.
-- [x] ThreeUI WebGL atmospheric shaders (`FluidField`, `Nebula`, `WarpField`, `EmberStorm`, `LiquidForm`).
-- [x] GPU-accelerated dual-ring custom cursor tracking at 120 FPS with automatic text input caret fallback.
-- [x] Radial right-click emoji context menu with 28-particle burst physics and toast reactions.
-- [x] Admin management portal with live telemetry, review moderation, and on-demand ML retrain.
+```mermaid
+flowchart TD
+  Phase1["Phase 1: Database Architecture & PostgreSQL 18"]
+  Phase2["Phase 2: FastAPI Backend Engine & In-Memory Cache"]
+  Phase3["Phase 3: Machine Learning & Hybrid Recommendation"]
+  Phase4["Phase 4: Next.js Frontend & WebGL Atmosphere"]
+  Phase5["Phase 5: Production Hardening, Animation Optimization & Verification"]
+  Phase6["Phase 6: Ultra-Smooth Motion System & Custom Cursor Redesign"]
+  Phase7["Phase 7: Watch Parties & Real-Time WebSockets"]
+  Phase8["Phase 8: Vector Re-Ranking & Generative AI Explanations"]
+
+  Phase1 --> Phase2
+  Phase2 --> Phase3
+  Phase3 --> Phase4
+  Phase4 --> Phase5
+  Phase5 --> Phase6
+  Phase6 -.-> Phase7
+  Phase7 -.-> Phase8
+
+  classDef completed fill:#064e3b,stroke:#059669,stroke-width:2px,color:#fff;
+  classDef inprogress fill:#1e3a8a,stroke:#3b82f6,stroke-width:2px,color:#fff;
+  classDef planned fill:#1f2937,stroke:#4b5563,stroke-width:1px,color:#9ca3af;
+
+  class Phase1,Phase2,Phase3,Phase4,Phase5,Phase6 completed;
+  class Phase7,Phase8 planned;
+```
 
 ---
 
-## 2. Completed Phases
+## 2. Core Phases Completed
 
-### Phase 1: Database Foundation & Schema Engineering
+### Phase 1: Database Architecture & PostgreSQL 18
 **Status:** ✅ Complete  
-**Objective:** Establish enterprise relational and vector schema in PostgreSQL 18 with migrations and deterministic seeding.  
-**Delivered:**
-- [x] Authored `setup_database.sql` with 14 tables, partitioned `user_interactions`, and HNSW cosine vector index.
-- [x] Built `backend/app/seed.py` and `movies_dataset_expanded.py` seeding 131 movies, 19 genres, and test users.
-- [x] Verified pgAdmin 4 F5 execution and SQLAlchemy connection pooling.
+**Deliverables:**
+- 14 production tables designed with foreign keys and CASCADE integrity.
+- `pgvector` extension enabled for 384-dimensional cosine similarity indexing.
+- Seeded movie catalog and admin/guest authentication profiles.
 
-### Phase 2: Core REST API & Identity Subsystem
+### Phase 2: FastAPI Backend Engine & In-Memory Cache
 **Status:** ✅ Complete  
-**Objective:** Construct high-performance async FastAPI backend with complete CRUD and security mechanics.  
-**Delivered:**
-- [x] Built `/api/v1/auth/` (register, login, refresh, profile update, GDPR retention).
-- [x] Built `/api/v1/movies/` (paginated catalog, 8-way multi-column sorting, faceted genre filter, movie details).
-- [x] Built `/api/v1/ratings/` (1–10 star ratings, spoiler reviews, helpful votes).
-- [x] Built `/api/v1/watchlists/` (multi-watchlist creation, priority ordering, watched toggle).
-- [x] Implemented in-memory bounded TTL cache (`app/core/cache.py`) with zero Redis overhead.
+**Deliverables:**
+- Native FastAPI REST endpoints for Auth, Movies, Ratings, Watchlists, and Admin.
+- Thread-safe in-memory LRU/TTL cache mechanism with zero Redis requirement.
+- Pytest integration suite verifying API response codes and token security.
 
-### Phase 3: Machine Learning Recommendation Engine
+### Phase 3: Machine Learning & Hybrid Recommendation
 **Status:** ✅ Complete  
-**Objective:** Design and train custom machine learning algorithms for personalized discovery.  
-**Delivered:**
-- [x] Implemented `CustomMovieRecommenderML` with SGD optimization, user/item biases, and genre projection matrices.
-- [x] Implemented `MatrixFactorizationALS` baseline collaborative filtering.
-- [x] Built `RecommendationEvaluator` (`backend/app/evaluation.py`) computing NDCG@K, Precision@K, Recall@K, MRR, Catalog Coverage, and Intra-List Diversity (ILD).
-- [x] Created `/api/v1/admin/retrain-ml` allowing real-time model recalibration without service downtime.
+**Deliverables:**
+- Custom Factorized SGD and ALS collaborative filtering models.
+- Hybrid blender weighting collaborative predictions with pgvector semantic similarity.
+- Offline metrics evaluation pipeline (RMSE, Precision@K, Recall@K, MAP, NDCG).
 
-### Phase 4: Modern WebGL & GSAP User Experience
+### Phase 4: Next.js Frontend & WebGL Atmosphere
 **Status:** ✅ Complete  
-**Objective:** Create an immersive, 60–120 FPS glassmorphic web application with Next.js 15 and ThreeUI.  
-**Delivered:**
-- [x] Integrated ThreeUI WebGL shaders with interactive floating dock switcher.
-- [x] Built `CustomCursor.tsx` dual-ring GPU cursor with magnetic hover scaling.
-- [x] Built `ThreeCard3D.tsx` cursor-relative perspective tilt and specular glare.
-- [x] Built `CustomContextMenu.tsx` radial emoji wheel with physics-driven particle explosions.
-- [x] Implemented 3 infinite background drifting poster marquee rows and 5.5s crossfade hero slideshow.
+**Deliverables:**
+- Next.js 15 App Router client with React 19 server/client boundaries.
+- Interactive ThreeUI shader atmosphere (`FluidFieldBackground`, `NebulaBackground`, `WarpFieldBackground`).
+- GSAP-powered custom cursor, 3D card perspective tilt, and animated context menus.
 
-### Phase 5: Production Hardening, Verification & Optimization
+### Phase 5: Production Hardening, Animation Optimization & Verification
 **Status:** ✅ Complete  
-**Objective:** Eliminate layout thrashing, fix runtime errors, remove dead code, and verify all test suites.  
-**Delivered:**
-- [x] Resolved `prefersReducedMotionRef is not defined` runtime ReferenceError in `ThreeCard3D.tsx`.
-- [x] Fixed infinite GSAP re-render loop in `GsapStagger.tsx` by decoupling `children` object references.
-- [x] Eliminated GPU compositing bottleneck by replacing 16px blur on 120 marquee cards with `bg-slate-900/50`.
-- [x] Cleaned 22 unused Python imports across `backend/app/` (0 unused imports confirmed via AST).
-- [x] Confirmed `ts-prune` clean (0 orphaned exports) and Next.js build clean across all 13 routes.
-- [x] Verified 100% pass rate on backend test suite: **16/16 pytest tests passing in 5.82s**.
+**Deliverables:**
+- Fixed runtime ReferenceErrors in 3D card leave events and GSAP stagger recursion.
+- Replaced 120-layer backdrop blur in marquee carousel with GPU-friendly translucent styling.
+- Verified 16/16 backend pytest unit tests passing.
+- Verified 13/13 Next.js routes compiling with zero type or build errors.
 
 ---
 
@@ -90,7 +87,6 @@ updated: 2026-11-09T22:30:00Z
 - [x] Smooth 3D card tilt with lerped inertia dampening (`lerp(current, target, 0.1)`) and buttery spring recovery.
 - [x] Fluid marquee acceleration/deceleration on hover and optimized 60–120 FPS continuous drifting.
 - [x] Seamless hero spotlight crossfading with animated progress bars and slide transitions.
-- [x] Synchronized 100% authentic high-resolution posters and backdrops from TMDB CDN (131/131 verified HTTP 200).
 
 **Plans:**
 - [x] Plan 6.1: Next-Gen Custom Cursor Redesign (Adaptive Morphing & Magnetic Snapping)
@@ -124,11 +120,10 @@ updated: 2026-11-09T22:30:00Z
 | **Phase 3** | Custom ML Recommender & Evaluator | ✅ Complete | Factorized SGD, ALS, RecSys Metrics | `test_rec_math.py` passed |
 | **Phase 4** | WebGL Shaders & GSAP Animations | ✅ Complete | ThreeUI, Cursor, 3D Cards, Radial Wheel | 60–120 FPS trace |
 | **Phase 5** | Hardening, Bug Fixes & Verification | ✅ Complete | Dead code removed, 16/16 tests pass | Pytest & next build |
-| **Phase 6** | Smooth Motion & Cursor Redesign | ✅ Complete | Adaptive cursor, lerped tilt, real artwork | 120 FPS trace, CDN 131/131 & build |
+| **Phase 6** | Smooth Motion & Cursor Redesign | ✅ Complete | Adaptive cursor, lerped tilt, marquee | 120 FPS trace & build |
 | **Phase 7** | Watch Parties & WebSockets | ⬜ Planned | Live rooms & real-time chat | Planned |
 | **Phase 8** | LLM Explanations & Natural Search | ⬜ Planned | Generative recs & semantic search | Planned |
 
 ---
 
 *Last updated: November 2026*
-
