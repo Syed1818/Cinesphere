@@ -82,10 +82,10 @@ export default function SignupPage() {
           <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-indigo-500 via-indigo-600 to-purple-600 flex items-center justify-center mx-auto text-white shadow-xl shadow-indigo-600/30 mb-5 group hover:scale-105 transition-transform duration-300">
             <Film className="w-7 h-7" />
           </div>
-          <h2 className="text-3xl font-black text-white tracking-tight">
+          <h2 className="text-3xl font-black text-white font-display tracking-tight">
             Create CineSphere Profile
           </h2>
-          <p className="text-xs text-slate-400 mt-1.5">
+          <p className="text-xs sm:text-sm text-slate-400 mt-1.5">
             Initialize your personalized ML taste vectors and recommendations
           </p>
         </div>
@@ -104,14 +104,14 @@ export default function SignupPage() {
                 Display Name
               </label>
               <div className="relative">
-                <UserIcon className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                <UserIcon className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
                 <input
                   type="text"
                   required
                   value={displayName}
                   onChange={(e) => setDisplayName(e.target.value)}
                   placeholder="e.g. Alex Miller"
-                  className="glass-input w-full pl-10 pr-3.5 py-2.5 rounded-xl text-sm text-slate-200 placeholder-slate-600 focus:outline-none"
+                  className="glass-input w-full h-11 pl-10 pr-3.5 rounded-xl text-sm text-slate-200 placeholder-slate-500 focus:outline-none"
                 />
               </div>
             </div>
@@ -126,7 +126,7 @@ export default function SignupPage() {
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 placeholder="alex_cinephile"
-                className="glass-input w-full px-3.5 py-2.5 rounded-xl text-sm text-slate-200 placeholder-slate-600 focus:outline-none"
+                className="glass-input w-full h-11 px-3.5 rounded-xl text-sm text-slate-200 placeholder-slate-500 focus:outline-none"
               />
             </div>
           </div>
@@ -136,14 +136,14 @@ export default function SignupPage() {
               Email Address
             </label>
             <div className="relative">
-              <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+              <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
               <input
                 type="email"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@example.com"
-                className="glass-input w-full pl-10 pr-4 py-2.5 rounded-xl text-sm text-slate-200 placeholder-slate-600 focus:outline-none"
+                className="glass-input w-full h-11 pl-10 pr-4 rounded-xl text-sm text-slate-200 placeholder-slate-500 focus:outline-none"
               />
             </div>
           </div>
@@ -153,7 +153,7 @@ export default function SignupPage() {
               Password
             </label>
             <div className="relative">
-              <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+              <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
               <input
                 type="password"
                 required
@@ -161,7 +161,7 @@ export default function SignupPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Minimum 6 characters"
-                className="glass-input w-full pl-10 pr-4 py-2.5 rounded-xl text-sm text-slate-200 placeholder-slate-600 focus:outline-none"
+                className="glass-input w-full h-11 pl-10 pr-4 rounded-xl text-sm text-slate-200 placeholder-slate-500 focus:outline-none"
               />
             </div>
           </div>
@@ -186,7 +186,7 @@ export default function SignupPage() {
                     key={g.id}
                     type="button"
                     onClick={() => toggleGenre(g.id)}
-                    className={`px-3.5 py-2 rounded-xl text-xs font-bold flex items-center space-x-2 transition-all duration-300 ${
+                    className={`px-3.5 py-2 rounded-xl text-xs font-bold flex items-center space-x-2 transition-all active:scale-95 ${
                       selected
                         ? "glass-pill-active scale-105"
                         : "glass-pill text-slate-400 hover:text-white hover:border-white/30"
@@ -203,7 +203,7 @@ export default function SignupPage() {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full py-3 mt-4 rounded-xl bg-gradient-to-r from-indigo-600 via-indigo-500 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-bold text-sm shadow-xl shadow-indigo-600/30 flex items-center justify-center space-x-2 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
+            className="three-liquid-metal-btn w-full h-12 mt-4 rounded-xl text-white font-bold text-sm shadow-xl shadow-indigo-600/30 flex items-center justify-center space-x-2 transition-all duration-200 hover:scale-[1.01] active:scale-[0.98]"
           >
             <span>{isSubmitting ? "Initializing Profile..." : "Complete Registration"}</span>
             <ArrowRight className="w-4 h-4" />

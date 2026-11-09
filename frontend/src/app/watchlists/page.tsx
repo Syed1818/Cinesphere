@@ -95,19 +95,19 @@ export default function WatchlistsPage() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-white/5">
         <div>
           <div className="flex items-center space-x-2.5 mb-1.5">
-            <div className="p-1.5 rounded-lg bg-amber-500/15 border border-amber-500/30 text-amber-400">
+            <div className="p-1.5 rounded-xl bg-amber-500/15 border border-amber-500/30 text-amber-400">
               <Bookmark className="w-4 h-4 fill-amber-400" />
             </div>
-            <h1 className="text-3xl font-black text-white tracking-tight">Your Watchlists</h1>
+            <h1 className="text-3xl sm:text-4xl font-black text-white font-display tracking-tight">Your Watchlists</h1>
           </div>
-          <p className="text-xs text-slate-400">
+          <p className="text-xs sm:text-sm text-slate-400">
             Curate and organize personal cinema collections and queued titles
           </p>
         </div>
 
         <button
           onClick={() => setShowCreateModal(true)}
-          className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-bold text-xs flex items-center space-x-2 shadow-lg shadow-indigo-600/30 transition-all duration-300 hover:scale-105"
+          className="h-11 px-5 rounded-full three-liquid-metal-btn text-white font-bold text-xs flex items-center space-x-2 shadow-lg shadow-indigo-600/30 transition-all duration-300 hover:scale-105 active:scale-95"
         >
           <Plus className="w-4 h-4" />
           <span>New Watchlist</span>
@@ -116,21 +116,21 @@ export default function WatchlistsPage() {
 
       {/* Watchlist Tabs */}
       {watchlists.length > 0 && (
-        <div className="flex items-center space-x-3 overflow-x-auto pb-2 scrollbar-none">
+        <div className="flex items-center space-x-2.5 overflow-x-auto pb-2 scrollbar-none">
           {watchlists.map((wl) => {
             const isActive = activeWatchlist?.id === wl.id;
             return (
               <button
                 key={wl.id}
                 onClick={() => setActiveWatchlistId(wl.id)}
-                className={`px-4 py-2.5 rounded-2xl text-xs font-bold whitespace-nowrap flex items-center space-x-2 transition-all duration-300 ${
+                className={`h-10 px-4 rounded-full text-xs font-semibold whitespace-nowrap flex items-center space-x-2 transition-all active:scale-95 ${
                   isActive
-                    ? "glass-pill-active"
+                    ? "glass-pill-active shadow-md"
                     : "glass-pill text-slate-400 hover:text-white"
                 }`}
               >
                 <span>{wl.name}</span>
-                <span className="px-2 py-0.5 rounded-full text-[10px] font-black bg-black/40 text-slate-300 border border-white/10">
+                <span className="px-2 py-0.5 rounded-full text-[10px] font-black bg-black/40 text-slate-300 border border-white/10 tabular-numbers">
                   {wl.items_count}
                 </span>
               </button>
@@ -143,7 +143,7 @@ export default function WatchlistsPage() {
       {isLoading ? (
         <LoadingSkeleton count={5} />
       ) : activeWatchlist && activeWatchlist.items.length > 0 ? (
-        <GsapStagger className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
+        <GsapStagger className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-5 lg:gap-6">
           {activeWatchlist.items.map((item) => {
             if (!item.movie) return null;
             return (
@@ -152,7 +152,7 @@ export default function WatchlistsPage() {
                 <button
                   onClick={() => handleRemoveItem(item.movie_id)}
                   title="Remove from watchlist"
-                  className="absolute bottom-3 right-3 z-20 p-2.5 rounded-full glass-pill bg-black/80 hover:bg-rose-600/80 hover:border-rose-500 text-slate-300 hover:text-white transition-all duration-200 shadow-xl hover:scale-110 active:scale-95"
+                  className="absolute bottom-2.5 right-2.5 z-20 p-2.5 rounded-full glass-pill bg-black/80 hover:bg-rose-600/80 hover:border-rose-500 text-slate-300 hover:text-white transition-all duration-200 shadow-xl hover:scale-110 active:scale-95"
                 >
                   <Trash2 className="w-3.5 h-3.5" />
                 </button>

@@ -221,7 +221,7 @@ export default function HomePage() {
   const row3 = allImagesMovies.slice(rowCount * 2);
 
   return (
-    <div className="relative space-y-16">
+    <div className="relative space-y-12 sm:space-y-14">
       {/* ========================================================================= */}
       {/* 1. DYNAMIC BACKGROUND MOVIE POSTER WALL & MARQUEE CAROUSEL               */}
       {/* ========================================================================= */}
@@ -229,21 +229,21 @@ export default function HomePage() {
         className="marquee-container absolute top-[-3rem] left-1/2 -translate-x-1/2 w-screen max-w-none overflow-hidden -z-10 pointer-events-none opacity-65 select-none"
         aria-hidden="true"
       >
-        <div className="relative w-full h-[880px] overflow-hidden flex flex-col justify-around py-4 rotate-[-1.5deg] scale-105 transform-gpu">
+        <div className="relative w-full h-[740px] sm:h-[800px] overflow-hidden flex flex-col justify-around py-4 rotate-[-1.5deg] scale-105 transform-gpu">
           {/* Row 1: Drift Left */}
           {row1.length > 0 && (
             <div className="marquee-row pointer-events-auto flex animate-marquee-slow whitespace-nowrap gap-4 will-change-transform transform-gpu">
               {[...row1, ...row1].map((movie, idx) => (
                 <div
                   key={`row1-${movie.id}-${idx}`}
-                  className="marquee-card w-32 sm:w-40 h-48 sm:h-60 rounded-2xl overflow-hidden bg-slate-900/50 shrink-0 border border-white/10 shadow-lg relative will-change-transform"
+                  className="marquee-card w-32 sm:w-36 h-48 sm:h-56 rounded-2xl overflow-hidden bg-slate-900/50 shrink-0 border border-white/10 shadow-lg relative will-change-transform"
                 >
                   <Image
                     src={getPosterUrl(movie.poster_path)}
                     alt=""
                     fill
                     loading="lazy"
-                    sizes="(max-width: 640px) 128px, 160px"
+                    sizes="(max-width: 640px) 128px, 144px"
                     className="object-cover"
                     unoptimized
                   />
@@ -259,14 +259,14 @@ export default function HomePage() {
               {[...row2, ...row2].map((movie, idx) => (
                 <div
                   key={`row2-${movie.id}-${idx}`}
-                  className="marquee-card w-32 sm:w-40 h-48 sm:h-60 rounded-2xl overflow-hidden bg-slate-900/50 shrink-0 border border-white/10 shadow-lg relative will-change-transform"
+                  className="marquee-card w-32 sm:w-36 h-48 sm:h-56 rounded-2xl overflow-hidden bg-slate-900/50 shrink-0 border border-white/10 shadow-lg relative will-change-transform"
                 >
                   <Image
                     src={getPosterUrl(movie.poster_path)}
                     alt=""
                     fill
                     loading="lazy"
-                    sizes="(max-width: 640px) 128px, 160px"
+                    sizes="(max-width: 640px) 128px, 144px"
                     className="object-cover"
                     unoptimized
                   />
@@ -282,14 +282,14 @@ export default function HomePage() {
               {[...row3, ...row3].map((movie, idx) => (
                 <div
                   key={`row3-${movie.id}-${idx}`}
-                  className="marquee-card w-32 sm:w-40 h-48 sm:h-60 rounded-2xl overflow-hidden bg-slate-900/50 shrink-0 border border-white/10 shadow-lg relative will-change-transform"
+                  className="marquee-card w-32 sm:w-36 h-48 sm:h-56 rounded-2xl overflow-hidden bg-slate-900/50 shrink-0 border border-white/10 shadow-lg relative will-change-transform"
                 >
                   <Image
                     src={getPosterUrl(movie.poster_path)}
                     alt=""
                     fill
                     loading="lazy"
-                    sizes="(max-width: 640px) 128px, 160px"
+                    sizes="(max-width: 640px) 128px, 144px"
                     className="object-cover"
                     unoptimized
                   />
@@ -317,7 +317,7 @@ export default function HomePage() {
           onKeyDown={handleHeroKeyDown}
           onMouseEnter={handleHeroMouseEnter}
           onMouseLeave={handleHeroMouseLeave}
-          className="relative rounded-3xl overflow-hidden glass-card shadow-2xl border border-white/15 min-h-[540px] md:min-h-[580px] flex items-end p-6 sm:p-10 md:p-14 group focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/50"
+          className="relative rounded-3xl overflow-hidden glass-card shadow-2xl border border-white/15 min-h-[520px] md:min-h-[560px] flex items-end p-6 sm:p-10 lg:p-12 group focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/50"
         >
           {/* Background Backdrop Image Slides with Buttery Crossfade & Ken Burns Slow Zoom */}
           {spotlightSlides.map((slide, idx) => {
@@ -356,16 +356,16 @@ export default function HomePage() {
           })}
 
           {/* Transparent Cinema Vignette Gradients */}
-          <div className="absolute inset-0 bg-gradient-to-t from-[#070a12]/90 via-[#070a12]/30 to-transparent z-[2] pointer-events-none" />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#070a12]/90 via-[#070a12]/30 to-transparent z-[2] pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#070a12]/90 via-[#070a12]/35 to-transparent z-[2] pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#070a12]/90 via-[#070a12]/35 to-transparent z-[2] pointer-events-none" />
 
           {/* Top-Right Slideshow Controls & Pause Button */}
-          <div className="absolute top-6 right-6 z-20 flex items-center space-x-2">
+          <div className="absolute top-5 right-5 sm:top-6 sm:right-6 z-20 flex items-center space-x-2">
             <button
               type="button"
               onClick={togglePause}
               title={isPaused ? "Resume Slideshow" : "Pause Slideshow"}
-              className="p-2.5 rounded-full glass-pill hover:glass-card text-slate-300 hover:text-white transition-all shadow-md active:scale-95"
+              className="w-9 h-9 sm:w-10 sm:h-10 rounded-full glass-pill hover:glass-card text-slate-300 hover:text-white flex items-center justify-center transition-all shadow-md active:scale-95"
             >
               {isPaused ? <Play className="w-4 h-4 fill-white" /> : <Pause className="w-4 h-4" />}
             </button>
@@ -374,7 +374,7 @@ export default function HomePage() {
               type="button"
               onClick={prevSlide}
               title="Previous Slide (ArrowLeft)"
-              className="p-2.5 rounded-full glass-pill hover:glass-card text-slate-300 hover:text-white transition-all shadow-md active:scale-95"
+              className="w-9 h-9 sm:w-10 sm:h-10 rounded-full glass-pill hover:glass-card text-slate-300 hover:text-white flex items-center justify-center transition-all shadow-md active:scale-95"
             >
               <ChevronLeft className="w-4 h-4" />
             </button>
@@ -383,34 +383,34 @@ export default function HomePage() {
               type="button"
               onClick={nextSlide}
               title="Next Slide (ArrowRight)"
-              className="p-2.5 rounded-full glass-pill hover:glass-card text-slate-300 hover:text-white transition-all shadow-md active:scale-95"
+              className="w-9 h-9 sm:w-10 sm:h-10 rounded-full glass-pill hover:glass-card text-slate-300 hover:text-white flex items-center justify-center transition-all shadow-md active:scale-95"
             >
               <ChevronRight className="w-4 h-4" />
             </button>
           </div>
 
           {/* Main Hero Content Box */}
-          <div className="relative z-10 max-w-2xl space-y-4 sm:space-y-5">
-            <div className="flex flex-wrap items-center gap-2.5">
-              <span className="three-badge-shimmer px-3.5 py-1 rounded-full text-xs font-black uppercase tracking-wider text-amber-300 flex items-center space-x-1.5 shadow-lg shadow-amber-500/10">
+          <div className="relative z-10 max-w-2xl space-y-4 sm:space-y-4.5">
+            <div className="flex flex-wrap items-center gap-2 sm:gap-2.5">
+              <span className="three-badge-shimmer px-3.5 py-1 rounded-full text-[11px] font-bold font-eyebrow text-amber-300 flex items-center space-x-1.5 shadow-lg shadow-amber-500/10">
                 <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-                <span>ThreeUI Spotlight #{activeSlide + 1}</span>
+                <span>Spotlight #{activeSlide + 1}</span>
               </span>
 
-              <div className="flex items-center space-x-1.5 px-3 py-1 rounded-full glass-pill text-amber-400 text-xs font-bold shadow-lg">
+              <div className="flex items-center space-x-1.5 px-3 py-1 rounded-full glass-pill text-amber-400 text-xs font-bold shadow-lg tabular-numbers">
                 <Star className="w-3.5 h-3.5 fill-amber-400" />
                 <span>{currentMovie.vote_average.toFixed(1)} TMDB</span>
               </div>
 
               {currentMovie.release_date && (
-                <div className="px-3 py-1 rounded-full glass-pill text-slate-300 text-xs font-medium">
+                <div className="px-3 py-1 rounded-full glass-pill text-slate-300 text-xs font-medium tabular-numbers">
                   {new Date(currentMovie.release_date).getFullYear()}
                 </div>
               )}
 
               {currentMovie.runtime_minutes > 0 && (
-                <div className="hidden sm:flex items-center space-x-1 px-3 py-1 rounded-full glass-pill text-slate-300 text-xs font-medium">
-                  <Clock className="w-3 h-3 text-slate-400" />
+                <div className="hidden sm:flex items-center space-x-1.5 px-3 py-1 rounded-full glass-pill text-slate-300 text-xs font-medium tabular-numbers">
+                  <Clock className="w-3.5 h-3.5 text-slate-400" />
                   <span>{currentMovie.runtime_minutes} min</span>
                 </div>
               )}
@@ -430,19 +430,19 @@ export default function HomePage() {
               )}
             </div>
 
-            <h1 className="text-3xl sm:text-5xl md:text-6xl font-black text-white tracking-tight leading-tight text-gradient-cinema drop-shadow-lg">
+            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black text-white font-display tracking-tight leading-[1.08] sm:leading-[1.1] text-gradient-cinema drop-shadow-lg">
               {currentMovie.title}
             </h1>
 
-            <p className="text-sm md:text-base text-slate-300 line-clamp-3 leading-relaxed max-w-xl">
+            <p className="text-sm md:text-base text-slate-300/90 line-clamp-3 leading-relaxed max-w-xl font-normal">
               {currentMovie.original_title !== currentMovie.title ? `(${currentMovie.original_title}) ` : ""}
               Immerse yourself in top-tier cinematic storytelling with rich character arcs, breathtaking cinematography, and custom machine learning recommendations tailored to your tastes.
             </p>
 
-            <div className="flex flex-wrap items-center gap-3.5 pt-2">
+            <div className="flex flex-wrap items-center gap-3 pt-2">
               <Link
                 href={`/movies/${currentMovie.id}`}
-                className="three-liquid-metal-btn px-7 py-3 rounded-full text-white font-bold text-sm flex items-center space-x-2.5 shadow-xl shadow-indigo-600/35 transition-all hover:scale-105 active:scale-95 group"
+                className="three-liquid-metal-btn h-11 sm:h-12 px-6 sm:px-7 rounded-full text-white font-bold text-sm flex items-center space-x-2.5 shadow-xl shadow-indigo-600/35 transition-all hover:scale-105 active:scale-95 group"
               >
                 <Play className="w-4 h-4 fill-white group-hover:scale-110 transition-transform" />
                 <span>Explore Movie</span>
@@ -450,7 +450,7 @@ export default function HomePage() {
               <WatchlistButton movieId={currentMovie.id} size="lg" />
               <Link
                 href="/movies"
-                className="px-5 py-3 rounded-full glass-pill hover:glass-card text-slate-300 hover:text-white font-semibold text-sm transition-all hover:scale-105 active:scale-95 flex items-center space-x-1.5"
+                className="h-11 sm:h-12 px-5 rounded-full glass-pill hover:glass-card text-slate-300 hover:text-white font-semibold text-sm transition-all hover:scale-105 active:scale-95 flex items-center space-x-2"
               >
                 <Compass className="w-4 h-4 text-indigo-400" />
                 <span>Browse All</span>
@@ -458,14 +458,14 @@ export default function HomePage() {
             </div>
 
             {/* Slide Indicator Progress Pills with Animated Timer Bar */}
-            <div className="flex items-center space-x-2 pt-4" role="tablist" aria-label="Slides">
+            <div className="flex items-center space-x-2 pt-3" role="tablist" aria-label="Slides">
               {spotlightSlides.map((slide, idx) => {
                 const isCurrent = idx === activeSlide;
                 return (
                   <button
                     key={`dot-${slide.id}`}
                     onClick={() => selectSlide(idx)}
-                    className={`relative h-2.5 rounded-full overflow-hidden transition-all duration-300 ${
+                    className={`relative h-2 rounded-full overflow-hidden transition-all duration-300 ${
                       isCurrent
                         ? "w-12 sm:w-16 bg-white/20 shadow-md shadow-indigo-500/30 ring-1 ring-white/30"
                         : "w-3 sm:w-4 bg-white/20 hover:bg-white/40 hover:w-6"
@@ -492,8 +492,8 @@ export default function HomePage() {
           </div>
 
           {/* Quick Slide Thumbnail Selector Strip on Desktop */}
-          <div className="hidden xl:flex flex-col gap-2 absolute bottom-10 right-10 z-10 w-72">
-            <div className="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center space-x-1.5 pb-1">
+          <div className="hidden xl:flex flex-col gap-2 absolute bottom-8 right-8 z-10 w-72">
+            <div className="text-[11px] font-bold font-eyebrow text-slate-400 flex items-center space-x-1.5 pb-1">
               <Layers className="w-3.5 h-3.5 text-indigo-400" />
               <span>Spotlight Carousel</span>
             </div>
@@ -522,7 +522,7 @@ export default function HomePage() {
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="text-xs font-bold text-white truncate">{slide.title}</div>
-                      <div className="flex items-center space-x-2 text-[10px] text-slate-400">
+                      <div className="flex items-center space-x-2 text-[10px] text-slate-400 tabular-numbers">
                         <span className="flex items-center text-amber-400 font-semibold">
                           <Star className="w-2.5 h-2.5 fill-amber-400 mr-0.5" />
                           {slide.vote_average.toFixed(1)}
@@ -549,19 +549,19 @@ export default function HomePage() {
       {genres.length > 0 && (
         <div className="space-y-3">
           <div className="flex items-center justify-between">
-            <h2 className="text-sm font-bold text-slate-400 uppercase tracking-widest flex items-center space-x-2">
-              <Film className="w-4 h-4 text-indigo-400" />
+            <h2 className="text-xs font-bold text-slate-400 font-eyebrow flex items-center space-x-2">
+              <Film className="w-3.5 h-3.5 text-indigo-400" />
               <span>Browse by Genre</span>
             </h2>
-            <Link href="/movies" className="text-xs font-semibold text-indigo-400 hover:text-indigo-300">
+            <Link href="/movies" className="text-xs font-semibold text-indigo-400 hover:text-indigo-300 transition-colors">
               View All 19 Genres &rarr;
             </Link>
           </div>
 
-          <div className="flex items-center space-x-2.5 overflow-x-auto pb-2 scrollbar-none">
+          <div className="flex items-center space-x-2 overflow-x-auto pb-2 scrollbar-none">
             <Link
               href="/movies"
-              className="px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap glass-pill-active shadow-md"
+              className="px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap glass-pill-active shadow-md active:scale-95"
             >
               All Genres
             </Link>
@@ -569,7 +569,7 @@ export default function HomePage() {
               <Link
                 key={g.id}
                 href={`/movies?genre=${g.tmdb_id}`}
-                className="px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap glass-pill text-slate-300 hover:text-white transition-all hover:scale-105"
+                className="px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap glass-pill text-slate-300 hover:text-white transition-all hover:scale-105 active:scale-95"
               >
                 {g.name}
               </Link>
@@ -582,27 +582,27 @@ export default function HomePage() {
       {/* 4. PERSONALIZED RECOMMENDATIONS SHELF (IF USER SIGNED IN)                  */}
       {/* ========================================================================= */}
       {user && recommendations.length > 0 && (
-        <section className="space-y-6">
+        <section className="space-y-5">
           <div className="flex items-center justify-between pb-3 border-b border-white/5">
             <div className="flex items-center space-x-3">
-              <div className="p-2.5 rounded-2xl bg-indigo-500/15 text-indigo-400 border border-indigo-500/30 shadow-inner">
+              <div className="w-10 h-10 rounded-2xl bg-indigo-500/15 text-indigo-400 border border-indigo-500/30 flex items-center justify-center shadow-inner shrink-0">
                 <Sparkles className="w-5 h-5" />
               </div>
               <div>
-                <h2 className="text-xl md:text-2xl font-black text-white">Recommended For You</h2>
-                <p className="text-xs text-slate-400">Custom ML algorithm matching your taste and watchlist signals</p>
+                <h2 className="text-xl sm:text-2xl font-black text-white font-display tracking-tight">Recommended For You</h2>
+                <p className="text-xs text-slate-400 mt-0.5">Custom ML algorithm matching your taste and watchlist signals</p>
               </div>
             </div>
             <Link
               href="/recommendations"
-              className="text-xs font-semibold text-indigo-400 hover:text-indigo-300 flex items-center space-x-1"
+              className="px-3.5 py-1.5 rounded-full glass-pill hover:bg-white/10 text-xs font-semibold text-indigo-400 hover:text-white flex items-center space-x-1 transition-all active:scale-95"
             >
               <span>Full Feed</span>
               <ChevronRight className="w-4 h-4" />
             </Link>
           </div>
 
-          <GsapStagger className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          <GsapStagger className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-5 lg:gap-6">
             {recommendations.slice(0, 4).map((movie) => (
               <RecommendationCard key={movie.id} movie={movie} />
             ))}
@@ -613,20 +613,20 @@ export default function HomePage() {
       {/* ========================================================================= */}
       {/* 5. TOP TRENDING MOVIES SHELF                                              */}
       {/* ========================================================================= */}
-      <section className="space-y-6">
+      <section className="space-y-5">
         <div className="flex items-center justify-between pb-3 border-b border-white/5">
           <div className="flex items-center space-x-3">
-            <div className="p-2.5 rounded-2xl bg-amber-500/15 text-amber-400 border border-amber-500/30 shadow-inner">
+            <div className="w-10 h-10 rounded-2xl bg-amber-500/15 text-amber-400 border border-amber-500/30 flex items-center justify-center shadow-inner shrink-0">
               <TrendingUp className="w-5 h-5" />
             </div>
             <div>
-              <h2 className="text-xl md:text-2xl font-black text-white">Top Trending Right Now</h2>
-              <p className="text-xs text-slate-400">High engagement velocity and critical acclaim across CineSphere</p>
+              <h2 className="text-xl sm:text-2xl font-black text-white font-display tracking-tight">Top Trending Right Now</h2>
+              <p className="text-xs text-slate-400 mt-0.5">High engagement velocity and critical acclaim across CineSphere</p>
             </div>
           </div>
           <Link
             href="/movies?sort=popularity"
-            className="text-xs font-semibold text-amber-400 hover:text-amber-300 flex items-center space-x-1"
+            className="px-3.5 py-1.5 rounded-full glass-pill hover:bg-white/10 text-xs font-semibold text-amber-400 hover:text-white flex items-center space-x-1 transition-all active:scale-95"
           >
             <span>Explore All</span>
             <ChevronRight className="w-4 h-4" />
@@ -636,7 +636,7 @@ export default function HomePage() {
         {isLoading ? (
           <LoadingSkeleton count={5} />
         ) : (
-          <GsapStagger className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
+          <GsapStagger className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-5 lg:gap-6">
             {trending.slice(0, 10).map((movie) => (
               <MovieCard key={movie.id} movie={movie} />
             ))}
@@ -648,27 +648,27 @@ export default function HomePage() {
       {/* 6. CRITICALLY ACCLAIMED MASTERPIECES SHELF                                */}
       {/* ========================================================================= */}
       {topRated.length > 0 && (
-        <section className="space-y-6">
+        <section className="space-y-5">
           <div className="flex items-center justify-between pb-3 border-b border-white/5">
             <div className="flex items-center space-x-3">
-              <div className="p-2.5 rounded-2xl bg-purple-500/15 text-purple-400 border border-purple-500/30 shadow-inner">
+              <div className="w-10 h-10 rounded-2xl bg-purple-500/15 text-purple-400 border border-purple-500/30 flex items-center justify-center shadow-inner shrink-0">
                 <Award className="w-5 h-5" />
               </div>
               <div>
-                <h2 className="text-xl md:text-2xl font-black text-white">Critically Acclaimed Masterpieces</h2>
-                <p className="text-xs text-slate-400">Highest rated cinema classics scored by global viewers</p>
+                <h2 className="text-xl sm:text-2xl font-black text-white font-display tracking-tight">Critically Acclaimed Masterpieces</h2>
+                <p className="text-xs text-slate-400 mt-0.5">Highest rated cinema classics scored by global viewers</p>
               </div>
             </div>
             <Link
               href="/movies?sort=vote_average"
-              className="text-xs font-semibold text-purple-400 hover:text-purple-300 flex items-center space-x-1"
+              className="px-3.5 py-1.5 rounded-full glass-pill hover:bg-white/10 text-xs font-semibold text-purple-400 hover:text-white flex items-center space-x-1 transition-all active:scale-95"
             >
               <span>View Leaderboard</span>
               <ChevronRight className="w-4 h-4" />
             </Link>
           </div>
 
-          <GsapStagger className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
+          <GsapStagger className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-5 lg:gap-6">
             {topRated.slice(0, 5).map((movie) => (
               <MovieCard key={movie.id} movie={movie} />
             ))}

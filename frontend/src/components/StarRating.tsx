@@ -187,7 +187,7 @@ export function StarRating({
                   placeholder="e.g. A visual masterpiece of sci-fi cinema"
                   value={reviewTitle}
                   onChange={(e) => setReviewTitle(e.target.value)}
-                  className="glass-input w-full px-3.5 py-2.5 rounded-xl text-sm text-slate-200 placeholder-slate-600 focus:outline-none"
+                  className="glass-input w-full h-11 px-3.5 rounded-xl text-sm text-slate-200 placeholder-slate-500 focus:outline-none"
                 />
               </div>
 
@@ -200,7 +200,7 @@ export function StarRating({
                   placeholder="Share your thoughts about direction, screenplay, cinematography..."
                   value={reviewBody}
                   onChange={(e) => setReviewBody(e.target.value)}
-                  className="glass-input w-full px-3.5 py-2.5 rounded-xl text-sm text-slate-200 placeholder-slate-600 focus:outline-none resize-none"
+                  className="glass-input w-full p-3.5 rounded-xl text-sm text-slate-200 placeholder-slate-500 focus:outline-none resize-none"
                 />
               </div>
 
@@ -212,23 +212,23 @@ export function StarRating({
                   onChange={(e) => setIsSpoiler(e.target.checked)}
                   className="rounded border-slate-700 bg-slate-900 text-indigo-500 focus:ring-indigo-500"
                 />
-                <label htmlFor="spoiler-check" className="text-xs text-slate-400 cursor-pointer">
+                <label htmlFor="spoiler-check" className="text-xs text-slate-400 cursor-pointer select-none">
                   This review contains spoilers
                 </label>
               </div>
 
-              <div className="flex items-center justify-end space-x-3 pt-3">
+              <div className="flex items-center justify-end space-x-2.5 pt-3">
                 <button
                   type="button"
                   onClick={() => setModalOpen(false)}
-                  className="px-4 py-2.5 text-xs font-bold text-slate-400 hover:text-white transition-colors"
+                  className="h-10 px-4 rounded-full glass-pill text-xs font-semibold text-slate-300 hover:text-white transition-all active:scale-95"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-bold text-xs shadow-lg shadow-indigo-600/30 transition-all duration-300 hover:scale-105"
+                  className="h-10 px-6 rounded-full three-liquid-metal-btn text-white font-bold text-xs shadow-lg transition-all hover:scale-105 active:scale-95"
                 >
                   {isSubmitting ? "Submitting..." : "Submit Rating"}
                 </button>

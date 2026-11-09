@@ -184,11 +184,11 @@ export default function ProfilePage() {
 
             <div className="space-y-2">
               <div className="flex items-center space-x-3 flex-wrap gap-y-1">
-                <h1 className="text-3xl font-black text-white tracking-tight">
+                <h1 className="text-3xl sm:text-4xl font-black text-white font-display tracking-tight">
                   {user.display_name}
                 </h1>
                 <span
-                  className={`px-3 py-0.5 rounded-full text-xs font-black uppercase tracking-wider border ${
+                  className={`px-3 py-0.5 rounded-full text-[11px] font-bold font-eyebrow border ${
                     user.role === "ADMIN"
                       ? "bg-rose-500/20 text-rose-300 border-rose-500/40"
                       : user.role === "CRITIC"
@@ -219,7 +219,7 @@ export default function ProfilePage() {
               </div>
 
               {user.bio ? (
-                <p className="text-xs sm:text-sm text-slate-300 italic pt-1 max-w-xl leading-relaxed">
+                <p className="text-xs sm:text-sm text-slate-300 italic pt-1 max-w-xl leading-relaxed font-normal">
                   &ldquo;{user.bio}&rdquo;
                 </p>
               ) : (
@@ -233,7 +233,7 @@ export default function ProfilePage() {
           <div className="flex items-center space-x-3">
             <button
               onClick={() => setShowEditModal(true)}
-              className="px-5 py-2.5 rounded-xl glass-pill hover:border-white/30 text-xs font-bold text-slate-200 hover:text-white flex items-center space-x-2 transition-all hover:scale-105"
+              className="h-11 px-5 rounded-full glass-pill hover:border-white/30 text-xs font-bold text-slate-200 hover:text-white flex items-center space-x-2 transition-all hover:scale-105 active:scale-95"
             >
               <Edit3 className="w-4 h-4 text-indigo-400" />
               <span>Edit Profile</span>
@@ -241,7 +241,7 @@ export default function ProfilePage() {
             {user.role === "ADMIN" && (
               <Link
                 href="/admin"
-                className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-rose-600 to-rose-700 hover:from-rose-500 hover:to-rose-600 text-white text-xs font-bold shadow-lg shadow-rose-600/30 flex items-center space-x-2 transition-all hover:scale-105"
+                className="h-11 px-5 rounded-full bg-gradient-to-r from-rose-600 to-rose-700 hover:from-rose-500 hover:to-rose-600 text-white text-xs font-bold shadow-lg shadow-rose-600/30 flex items-center space-x-2 transition-all hover:scale-105 active:scale-95"
               >
                 <Shield className="w-4 h-4" />
                 <span>Admin Console</span>

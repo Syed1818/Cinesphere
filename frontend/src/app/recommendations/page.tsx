@@ -88,18 +88,18 @@ export default function RecommendationsDashboardPage() {
 
         <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
           <div className="max-w-2xl space-y-3">
-            <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full text-xs font-bold three-badge-shimmer text-indigo-300">
+            <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full text-xs font-bold font-eyebrow three-badge-shimmer text-indigo-300">
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
               <Brain className="w-3.5 h-3.5 text-indigo-400" />
               <span>Custom Factorized Feature ML Model Active</span>
             </div>
 
-            <h1 className="text-3xl sm:text-4xl font-black text-white tracking-tight">
+            <h1 className="text-3xl sm:text-4xl font-black text-white font-display tracking-tight">
               Personalized Intelligence,{" "}
               <span className="text-gradient-cinema">{user.display_name}</span>
             </h1>
 
-            <p className="text-sm text-slate-300 leading-relaxed">
+            <p className="text-sm text-slate-300/95 leading-relaxed font-normal">
               Every recommendation is calculated in real-time by computing cosine affinity across
               dense 40-dimensional feature representations, weighting your ratings and collaborative community signals.
             </p>
@@ -108,7 +108,7 @@ export default function RecommendationsDashboardPage() {
           <div className="flex flex-col sm:flex-row gap-3">
             <button
               onClick={() => setShowModelDetails(!showModelDetails)}
-              className="px-4 py-2.5 rounded-xl glass-pill text-xs font-bold text-slate-200 hover:text-white flex items-center justify-center space-x-2 transition-all hover:border-white/30"
+              className="h-11 px-4 rounded-full glass-pill text-xs font-bold text-slate-200 hover:text-white flex items-center justify-center space-x-2 transition-all hover:border-white/30 active:scale-95"
             >
               <Layers className="w-4 h-4 text-indigo-400" />
               <span>{showModelDetails ? "Hide ML Breakdown" : "View ML Architecture"}</span>
@@ -117,7 +117,7 @@ export default function RecommendationsDashboardPage() {
 
             <Link
               href="/movies"
-              className="px-5 py-2.5 rounded-xl three-liquid-metal-btn text-white font-bold text-xs shadow-lg flex items-center justify-center space-x-2 transition-all hover:scale-105"
+              className="h-11 px-5 rounded-full three-liquid-metal-btn text-white font-bold text-xs shadow-lg flex items-center justify-center space-x-2 transition-all hover:scale-105 active:scale-95"
             >
               <Sparkles className="w-4 h-4" />
               <span>Rate More Films</span>
@@ -216,7 +216,7 @@ export default function RecommendationsDashboardPage() {
       {isLoading ? (
         <LoadingSkeleton count={8} />
       ) : filteredRecs.length > 0 ? (
-        <GsapStagger className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <GsapStagger className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 lg:gap-6">
           {filteredRecs.map((movie) => (
             <RecommendationCard key={movie.id} movie={movie} />
           ))}

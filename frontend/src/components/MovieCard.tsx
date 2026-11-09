@@ -78,13 +78,13 @@ export function MovieCard({ movie }: MovieCardProps) {
         <div className="absolute inset-0 bg-gradient-to-b from-white/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
 
         {/* Rating Badge (Glassmorphic) */}
-        <div className="absolute bottom-3 left-3 flex items-center space-x-1.5 px-2.5 py-1 rounded-full glass-pill text-xs font-bold text-amber-400 shadow-lg">
+        <div className="absolute bottom-2.5 left-2.5 flex items-center space-x-1.5 px-2.5 py-1 rounded-full glass-pill text-xs font-bold text-amber-400 shadow-lg tabular-numbers">
           <Star className="w-3.5 h-3.5 fill-amber-400" />
           <span>{movie.vote_average.toFixed(1)}</span>
         </div>
 
         {/* Watchlist Toggle Button (Top Right) */}
-        <div className="absolute top-3 right-3 z-10" onClick={(e) => e.stopPropagation()}>
+        <div className="absolute top-2.5 right-2.5 z-10" onClick={(e) => e.stopPropagation()}>
           <WatchlistButton movieId={movie.id} size="sm" />
         </div>
 
@@ -98,9 +98,9 @@ export function MovieCard({ movie }: MovieCardProps) {
       </Link>
 
       {/* Card Content & Metadata */}
-      <div className="p-4 flex flex-col flex-1 justify-between bg-slate-900/30">
+      <div className="p-3.5 sm:p-4 flex flex-col flex-1 justify-between bg-slate-900/40">
         <div>
-          <div className="flex items-center justify-between text-[11px] text-slate-400 mb-1.5 font-medium">
+          <div className="flex items-center justify-between text-[11px] text-slate-400 mb-1 font-medium tabular-numbers">
             <span>{releaseYear}</span>
             {movie.runtime_minutes > 0 && (
               <span className="flex items-center space-x-1">
@@ -111,18 +111,18 @@ export function MovieCard({ movie }: MovieCardProps) {
           </div>
 
           <Link href={`/movies/${movie.id}`}>
-            <h3 className="font-bold text-sm text-slate-100 group-hover:text-indigo-400 transition-colors line-clamp-1">
+            <h3 className="font-display font-bold text-sm text-slate-100 group-hover:text-indigo-400 transition-colors line-clamp-1 leading-snug">
               {movie.title}
             </h3>
           </Link>
         </div>
 
         {/* Genre Tags */}
-        <div className="flex flex-wrap gap-1.5 mt-3">
+        <div className="flex flex-wrap gap-1.5 mt-2.5">
           {movie.genres?.slice(0, 2).map((g) => (
             <span
               key={g.id}
-              className="text-[10px] px-2 py-0.5 rounded-md glass-pill text-slate-300 font-medium"
+              className="text-[10px] px-2.5 py-0.5 rounded-full glass-pill text-slate-300 font-medium font-eyebrow"
             >
               {g.name}
             </span>

@@ -152,31 +152,31 @@ function MoviesCatalogContent() {
   const hasActiveFilters = Boolean(querySearch || queryGenre !== undefined || querySort !== "popularity");
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-7">
       {/* Header & Search */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-white/5">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-5 pb-6 border-b border-white/5">
         <div>
-          <h1 className="text-3xl font-black text-white tracking-tight text-gradient-cinema">Movie Catalog</h1>
-          <p className="text-xs text-slate-400 mt-1">
-            Browse {totalItems > 0 ? `${totalItems} curated titles` : "all movies"} with real-time sorting and multi-genre filtering
+          <h1 className="text-3xl sm:text-4xl font-black text-white font-display tracking-tight text-gradient-cinema">Movie Catalog</h1>
+          <p className="text-xs sm:text-sm text-slate-400 mt-1">
+            Browse {totalItems > 0 ? `${totalItems.toLocaleString()} curated titles` : "all movies"} with real-time sorting and multi-genre filtering
           </p>
         </div>
 
-        {/* Search Bar */}
+        {/* Search Bar with Ergonomic Position & Focus */}
         <form onSubmit={handleSearchSubmit} className="relative w-full md:max-w-md">
-          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
           <input
             type="text"
             placeholder="Search catalog by title, plot, keyword..."
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
-            className="w-full pl-10 pr-24 py-2.5 glass-input rounded-full text-sm text-slate-100 placeholder-slate-400 focus:outline-none transition-colors"
+            className="w-full h-11 pl-10 pr-24 glass-input rounded-full text-sm text-slate-100 placeholder-slate-400 focus:outline-none transition-colors"
           />
           {searchInput && (
             <button
               type="button"
               onClick={handleClearSearch}
-              className="absolute right-16 top-1/2 -translate-y-1/2 p-1 text-slate-400 hover:text-white transition-colors"
+              className="absolute right-20 top-1/2 -translate-y-1/2 p-1 text-slate-400 hover:text-white transition-colors"
               title="Clear search"
             >
               <X className="w-3.5 h-3.5" />
@@ -184,7 +184,7 @@ function MoviesCatalogContent() {
           )}
           <button
             type="submit"
-            className="absolute right-1.5 top-1/2 -translate-y-1/2 px-4 py-1.5 rounded-full three-liquid-metal-btn text-white text-xs font-semibold shadow-md transition-all hover:scale-105"
+            className="absolute right-1.5 top-1/2 -translate-y-1/2 px-4 py-1.5 rounded-full three-liquid-metal-btn text-white text-xs font-bold shadow-md transition-all hover:scale-105 active:scale-95"
           >
             Search
           </button>
@@ -197,7 +197,7 @@ function MoviesCatalogContent() {
         <div className="flex items-center space-x-2 overflow-x-auto pb-2 w-full sm:w-auto scrollbar-none">
           <button
             onClick={() => handleGenreSelect(undefined)}
-            className={`px-3.5 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all ${
+            className={`px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition-all active:scale-95 ${
               queryGenre === undefined
                 ? "glass-pill-active shadow-md"
                 : "glass-pill text-slate-300 hover:text-white"
@@ -211,7 +211,7 @@ function MoviesCatalogContent() {
               <button
                 key={g.id}
                 onClick={() => handleGenreSelect(g.tmdb_id)}
-                className={`px-3.5 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all ${
+                className={`px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition-all active:scale-95 ${
                   isSelected
                     ? "glass-pill-active shadow-md"
                     : "glass-pill text-slate-300 hover:text-white"
@@ -224,11 +224,11 @@ function MoviesCatalogContent() {
         </div>
 
         {/* Sort Dropdown & Reset Filters */}
-        <div className="flex items-center space-x-3 shrink-0 self-end sm:self-auto">
+        <div className="flex items-center space-x-2.5 shrink-0 self-end sm:self-auto">
           {hasActiveFilters && (
             <button
               onClick={handleResetFilters}
-              className="px-3 py-1.5 rounded-xl glass-pill text-xs text-slate-300 hover:text-white hover:border-white/20 transition-all flex items-center space-x-1"
+              className="px-3.5 py-2 rounded-full glass-pill text-xs font-semibold text-slate-300 hover:text-white hover:border-white/20 transition-all flex items-center space-x-1.5 active:scale-95"
               title="Reset all active filters"
             >
               <X className="w-3.5 h-3.5 text-rose-400" />
@@ -236,7 +236,7 @@ function MoviesCatalogContent() {
             </button>
           )}
 
-          <div className="flex items-center space-x-2 glass-pill rounded-xl px-3 py-1.5">
+          <div className="flex items-center space-x-2 glass-pill rounded-full px-3.5 py-2">
             <ArrowUpDown className="w-3.5 h-3.5 text-indigo-400" />
             <span className="text-xs text-slate-400 font-medium">Sort:</span>
             <select
@@ -290,8 +290,8 @@ function MoviesCatalogContent() {
 
       {/* Movie Grid */}
       {movies.length > 0 ? (
-        <div className="space-y-10">
-          <GsapStagger className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
+        <div className="space-y-8">
+          <GsapStagger className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-5 lg:gap-6">
             {movies.map((m) => (
               <MovieCard key={m.id} movie={m} />
             ))}
@@ -299,11 +299,11 @@ function MoviesCatalogContent() {
 
           {/* Infinite Scroll / Load More Button */}
           {queryPage < totalPages && (
-            <div className="flex justify-center pt-6">
+            <div className="flex justify-center pt-4">
               <button
                 onClick={handleLoadMore}
                 disabled={isLoadingMore}
-                className="three-liquid-metal-btn px-8 py-3 rounded-full text-sm font-bold text-white transition-all hover:scale-105 active:scale-95 shadow-xl flex items-center space-x-2"
+                className="three-liquid-metal-btn h-12 px-8 rounded-full text-sm font-bold text-white transition-all hover:scale-105 active:scale-95 shadow-xl flex items-center space-x-2"
               >
                 {isLoadingMore ? (
                   <>
@@ -311,7 +311,7 @@ function MoviesCatalogContent() {
                     <span>Loading Next Page...</span>
                   </>
                 ) : (
-                  <span>Load More Titles ({movies.length} of {totalItems})</span>
+                  <span className="tabular-numbers">Load More Titles ({movies.length} of {totalItems.toLocaleString()})</span>
                 )}
               </button>
             </div>

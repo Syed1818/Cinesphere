@@ -54,9 +54,9 @@ export function WatchlistButton({
   };
 
   const sizeClasses = {
-    sm: "p-2 text-xs",
-    md: "p-2.5 text-sm",
-    lg: "px-4 py-2.5 text-sm",
+    sm: "w-8 h-8 p-1.5 text-xs",
+    md: "w-10 h-10 p-2 text-sm",
+    lg: "h-11 sm:h-12 px-5 py-2.5 text-sm font-semibold",
   };
 
   return (

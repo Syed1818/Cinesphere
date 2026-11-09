@@ -28,18 +28,18 @@ export function EmptyState({
         <Icon className="w-10 h-10 group-hover:rotate-6 transition-transform" />
       </div>
 
-      <h3 className="relative z-10 text-2xl font-black text-white tracking-tight mb-2.5">
+      <h3 className="relative z-10 text-2xl sm:text-3xl font-black text-white font-display tracking-tight mb-2.5">
         {title}
       </h3>
 
-      <p className="relative z-10 text-sm text-slate-400 max-w-md leading-relaxed mb-8">
+      <p className="relative z-10 text-sm text-slate-300/90 max-w-md leading-relaxed mb-7 font-normal">
         {description}
       </p>
 
       {actionText && actionHref && (
         <Link
           href={actionHref}
-          className="relative z-10 px-6 py-3 rounded-xl bg-gradient-to-r from-indigo-600 via-indigo-500 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-bold text-sm shadow-xl shadow-indigo-600/30 transition-all duration-300 hover:scale-105 hover:shadow-indigo-500/40"
+          className="relative z-10 h-11 px-7 rounded-full three-liquid-metal-btn text-white font-bold text-sm shadow-xl shadow-indigo-600/30 flex items-center justify-center transition-all duration-200 hover:scale-105 active:scale-95"
         >
           {actionText}
         </Link>

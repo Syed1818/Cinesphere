@@ -66,13 +66,13 @@ export function RecommendationCard({ movie }: RecommendationCardProps) {
       <div className="pointer-events-none absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-indigo-500/50 to-transparent z-20" />
 
       {/* Top Banner: Match Percentage & Algorithm Pill */}
-      <div className="p-3 bg-slate-950/20 backdrop-blur-md border-b border-white/5 flex items-center justify-between">
+      <div className="p-3 bg-slate-950/40 backdrop-blur-md border-b border-white/5 flex items-center justify-between">
         <div className="flex items-center space-x-1.5">
-          <span className="text-xs font-black text-emerald-400 bg-emerald-500/15 px-2.5 py-0.5 rounded-full border border-emerald-500/30 shadow-sm shadow-emerald-500/20">
+          <span className="text-xs font-black text-emerald-400 bg-emerald-500/15 px-2.5 py-0.5 rounded-full border border-emerald-500/30 shadow-sm shadow-emerald-500/20 tabular-numbers">
             {matchPercentage}% Match
           </span>
         </div>
-        <div className={`flex items-center space-x-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-semibold border ${badge.color}`}>
+        <div className={`flex items-center space-x-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-semibold font-eyebrow border ${badge.color}`}>
           <Icon className="w-3 h-3" />
           <span>{badge.label}</span>
         </div>
@@ -101,37 +101,37 @@ export function RecommendationCard({ movie }: RecommendationCardProps) {
           <div className={`w-full h-full p-6 flex flex-col justify-between bg-gradient-to-b ${getGenreGradient(primaryGenre)}`}>
             <div className="flex items-center justify-between text-xs text-indigo-300 font-mono">
               <span>{primaryGenre}</span>
-              <span>{movie.release_date ? new Date(movie.release_date).getFullYear() : ""}</span>
+              <span className="tabular-numbers">{movie.release_date ? new Date(movie.release_date).getFullYear() : ""}</span>
             </div>
             <div className="my-auto text-center space-y-2">
               <Film className="w-8 h-8 text-indigo-400 mx-auto opacity-70 group-hover:scale-110 transition-transform" />
-              <h4 className="font-extrabold text-sm text-white line-clamp-2 px-2">{movie.title}</h4>
+              <h4 className="font-extrabold text-sm text-white line-clamp-2 px-2 font-display">{movie.title}</h4>
             </div>
-            <span className="text-[10px] text-slate-500 text-center uppercase tracking-widest">Personalized Recommendation</span>
+            <span className="text-[10px] text-slate-500 text-center uppercase tracking-widest font-eyebrow">Personalized Recommendation</span>
           </div>
         )}
 
         <div className="absolute inset-0 bg-gradient-to-t from-[#070a12] via-transparent to-transparent opacity-80" />
 
-        <div className="absolute top-3 right-3 z-10" onClick={(e) => e.stopPropagation()}>
+        <div className="absolute top-2.5 right-2.5 z-10" onClick={(e) => e.stopPropagation()}>
           <WatchlistButton movieId={movie.id} size="sm" />
         </div>
 
-        <div className="absolute bottom-3 left-3 flex items-center space-x-1.5 px-2.5 py-1 rounded-full glass-pill text-xs font-bold text-amber-400 shadow-md">
+        <div className="absolute bottom-2.5 left-2.5 flex items-center space-x-1.5 px-2.5 py-1 rounded-full glass-pill text-xs font-bold text-amber-400 shadow-md tabular-numbers">
           <Star className="w-3.5 h-3.5 fill-amber-400" />
           <span>{movie.vote_average.toFixed(1)}</span>
         </div>
       </Link>
 
       {/* Explanation & Info */}
-      <div className="p-4 flex flex-col flex-1 justify-between bg-slate-950/20 backdrop-blur-md">
+      <div className="p-3.5 sm:p-4 flex flex-col flex-1 justify-between bg-slate-950/30 backdrop-blur-md">
         <div>
           <Link href={`/movies/${movie.id}`}>
-            <h3 className="font-bold text-sm text-slate-100 group-hover:text-indigo-400 transition-colors line-clamp-1 mb-1.5">
+            <h3 className="font-display font-bold text-sm text-slate-100 group-hover:text-indigo-400 transition-colors line-clamp-1 mb-1.5">
               {movie.title}
             </h3>
           </Link>
-          <p className="text-xs text-slate-400 italic line-clamp-2 mb-3 bg-slate-950/25 p-2 rounded-lg border border-white/5">
+          <p className="text-xs text-slate-300/90 italic line-clamp-2 mb-3 bg-slate-900/60 p-2.5 rounded-xl border border-white/5 leading-relaxed">
             &ldquo;{movie.explanation}&rdquo;
           </p>
         </div>

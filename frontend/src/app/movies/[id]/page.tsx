@@ -91,7 +91,7 @@ export default function MovieDetailPage() {
   const primaryGenre = movie.genres?.[0]?.name || "Cinema";
 
   return (
-    <div className="space-y-16">
+    <div className="space-y-12 sm:space-y-14">
       {/* Backdrop & Hero Section */}
       <div className="relative rounded-3xl overflow-hidden glass-card shadow-2xl bg-slate-950">
         {backdropUrl && !backdropError && (
@@ -128,9 +128,9 @@ export default function MovieDetailPage() {
                 <span className="text-xs uppercase tracking-widest text-indigo-400 font-mono">{primaryGenre}</span>
                 <div className="my-auto space-y-2">
                   <Film className="w-12 h-12 text-indigo-400 mx-auto" />
-                  <h4 className="font-black text-lg text-white line-clamp-3">{movie.title}</h4>
+                  <h4 className="font-display font-black text-lg text-white line-clamp-3">{movie.title}</h4>
                 </div>
-                <span className="text-[10px] text-slate-500 uppercase tracking-widest">CineSphere Showcase</span>
+                <span className="text-[10px] text-slate-500 uppercase tracking-widest font-eyebrow">CineSphere Showcase</span>
               </div>
             )}
             <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent opacity-60 pointer-events-none" />
@@ -143,24 +143,24 @@ export default function MovieDetailPage() {
                 {movie.genres.map((g) => (
                   <span
                     key={g.id}
-                    className="px-3.5 py-1 rounded-full text-xs font-semibold glass-pill text-indigo-300 border-indigo-500/20 shadow-sm"
+                    className="px-3.5 py-1 rounded-full text-[11px] font-semibold font-eyebrow glass-pill text-indigo-300 border-indigo-500/20 shadow-sm"
                   >
                     {g.name}
                   </span>
                 ))}
               </div>
 
-              <h1 className="text-3xl sm:text-5xl font-black text-white tracking-tight leading-tight text-gradient-cinema">
+              <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black text-white font-display tracking-tight leading-[1.08] sm:leading-[1.1] text-gradient-cinema drop-shadow-md">
                 {movie.title}
               </h1>
 
               {movie.tagline && (
-                <p className="text-sm md:text-base italic text-slate-300/80">&ldquo;{movie.tagline}&rdquo;</p>
+                <p className="text-sm md:text-base italic text-slate-300/80 font-normal">&ldquo;{movie.tagline}&rdquo;</p>
               )}
             </div>
 
             {/* Quick Stats Pill Bar */}
-            <div className="flex flex-wrap items-center gap-4 sm:gap-6 text-xs text-slate-300 py-3 border-y border-white/10">
+            <div className="flex flex-wrap items-center gap-3 sm:gap-4 text-xs text-slate-300 py-3 border-y border-white/10 tabular-numbers">
               <div className="flex items-center space-x-1.5 text-amber-400 font-bold glass-pill px-3 py-1 rounded-full shadow-md">
                 <Star className="w-4 h-4 fill-amber-400" />
                 <span className="text-sm">{movie.vote_average.toFixed(1)}</span>
@@ -187,14 +187,14 @@ export default function MovieDetailPage() {
 
             {/* Overview / Synopsis */}
             <div className="space-y-2">
-              <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400">Synopsis</h3>
-              <p className="text-sm sm:text-base text-slate-300 leading-relaxed max-w-3xl font-normal">
+              <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400 font-eyebrow">Synopsis</h3>
+              <p className="text-sm sm:text-base text-slate-300/95 leading-relaxed max-w-3xl font-normal">
                 {movie.overview}
               </p>
             </div>
 
             {/* Rating UI & Watchlist Action Bar (Glassmorphic) */}
-            <div className="pt-4 flex flex-wrap items-center gap-6 glass-card p-6 rounded-2xl shadow-xl">
+            <div className="pt-2 flex flex-wrap items-center gap-6 glass-card p-5 sm:p-6 rounded-2xl shadow-xl">
               <div>
                 <span className="block text-xs font-bold text-slate-300 mb-2 flex items-center space-x-1.5">
                   <Star className="w-3.5 h-3.5 text-amber-400 fill-amber-400" />
@@ -220,9 +220,9 @@ export default function MovieDetailPage() {
       {movie.top_cast && movie.top_cast.length > 0 && (
         <section className="space-y-5">
           <div className="flex items-center space-x-2.5 pb-2 border-b border-white/5">
-            <h2 className="text-xl font-bold text-white">Top Billed Cast</h2>
+            <h2 className="text-xl sm:text-2xl font-black text-white font-display tracking-tight">Top Billed Cast</h2>
           </div>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3.5 sm:gap-4">
             {movie.top_cast.map((c) => (
               <div
                 key={c.id}
@@ -245,7 +245,7 @@ export default function MovieDetailPage() {
                 </div>
                 <div>
                   <h4 className="text-xs font-bold text-white line-clamp-1">{c.name}</h4>
-                  <p className="text-[11px] text-slate-400 line-clamp-1">{c.character_name}</p>
+                  <p className="text-[11px] text-slate-400 line-clamp-1 font-normal">{c.character_name}</p>
                 </div>
               </div>
             ))}
@@ -255,18 +255,18 @@ export default function MovieDetailPage() {
 
       {/* Similar Movies Section */}
       {similarMovies.length > 0 && (
-        <section className="space-y-6">
+        <section className="space-y-5">
           <div className="flex items-center space-x-3 pb-3 border-b border-white/5">
-            <div className="p-2.5 rounded-2xl bg-indigo-500/15 text-indigo-400 border border-indigo-500/30 shadow-inner">
+            <div className="w-10 h-10 rounded-2xl bg-indigo-500/15 text-indigo-400 border border-indigo-500/30 flex items-center justify-center shadow-inner shrink-0">
               <Sparkles className="w-5 h-5" />
             </div>
             <div>
-              <h2 className="text-xl font-bold text-white">More Like This</h2>
-              <p className="text-xs text-slate-400">Item-to-item feature similarity computed in custom ML representation space</p>
+              <h2 className="text-xl sm:text-2xl font-black text-white font-display tracking-tight">More Like This</h2>
+              <p className="text-xs text-slate-400 mt-0.5">Item-to-item feature similarity computed in custom ML representation space</p>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 lg:gap-6">
             {similarMovies.map((sim) => (
               <RecommendationCard key={sim.id} movie={sim} />
             ))}
@@ -275,12 +275,12 @@ export default function MovieDetailPage() {
       )}
 
       {/* Community Reviews Section */}
-      <section className="space-y-6">
+      <section className="space-y-5">
         <div className="flex items-center space-x-3 pb-3 border-b border-white/5">
-          <div className="p-2.5 rounded-2xl bg-purple-500/15 text-purple-400 border border-purple-500/30 shadow-inner">
+          <div className="w-10 h-10 rounded-2xl bg-purple-500/15 text-purple-400 border border-purple-500/30 flex items-center justify-center shadow-inner shrink-0">
             <MessageSquare className="w-5 h-5" />
           </div>
-          <h2 className="text-xl font-bold text-white">Community Reviews ({reviews.length})</h2>
+          <h2 className="text-xl sm:text-2xl font-black text-white font-display tracking-tight">Community Reviews ({reviews.length})</h2>
         </div>
 
         {reviews.length > 0 ? (
