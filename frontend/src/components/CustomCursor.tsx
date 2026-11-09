@@ -19,7 +19,10 @@ export function CustomCursor() {
   useEffect(() => {
     // Only enable custom cursor on devices with a fine pointer (desktop mouse/trackpad)
     if (typeof window !== "undefined" && window.matchMedia("(pointer: fine)").matches) {
-      setEnabled(true);
+      const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      if (!prefersReduced) {
+        setEnabled(true);
+      }
     }
   }, []);
 
@@ -128,49 +131,59 @@ export function CustomCursor() {
         targetDotScale = 1;
       }
 
-      // 2. Lerp dot position (immediate response, factor = 0.45)
-      const dotFactor = prefersReducedMotion ? 1 : 0.45;
-      dotX = lerp(dotX, mouseX, dotFactor);
-      dotY = lerp(dotY, mouseY, dotFactor);
+      // 2. Direct dot tracking (0ms input lag - matches physical mouse 1:1)
+      dotX = mouseX;
+      dotY = mouseY;
 
-      // 3. Lerp follower position (spring-damped trailing, factor = 0.15)
+      // 3. Lerp follower position (snappy, spring-damped trailing, factor = 0.35)
       const prevFollowerX = followerX;
       const prevFollowerY = followerY;
-      const followerFactor = prefersReducedMotion ? 1 : 0.15;
+      const followerFactor = prefersReducedMotion ? 1 : 0.35;
       followerX = lerp(followerX, targetFollowerX, followerFactor);
       followerY = lerp(followerY, targetFollowerY, followerFactor);
 
       // 4. Follower and dot scale interpolation
-      baseFollowerScale = lerp(baseFollowerScale, targetFollowerScale, 0.2);
-      baseDotScale = lerp(baseDotScale, targetDotScale, 0.22);
-      clickScale = lerp(clickScale, targetClickScale, 0.25);
+      baseFollowerScale = lerp(baseFollowerScale, targetFollowerScale, 0.28);
+      baseDotScale = lerp(baseDotScale, targetDotScale, 0.3);
+      clickScale = lerp(clickScale, targetClickScale, 0.3);
 
       // 5. Velocity and organic squash/stretch (applied when not magnetically locked)
       const deltaX = followerX - prevFollowerX;
       const deltaY = followerY - prevFollowerY;
       const speed = Math.hypot(deltaX, deltaY);
 
-      if (!prefersReducedMotion && cursorState === "DEFAULT" && speed > 0.15) {
+      if (!prefersReducedMotion && cursorState === "DEFAULT" && speed > 0.3) {
         currentAngle = Math.atan2(deltaY, deltaX) * (180 / Math.PI);
         const targetScaleX = 1 + Math.min(speed * 0.035, 0.45);
         const targetScaleY = 1 / (1 + (targetScaleX - 1) * 0.6);
-        currentScaleX = lerp(currentScaleX, targetScaleX, 0.25);
-        currentScaleY = lerp(currentScaleY, targetScaleY, 0.25);
+        currentScaleX = lerp(currentScaleX, targetScaleX, 0.28);
+        currentScaleY = lerp(currentScaleY, targetScaleY, 0.28);
       } else {
-        currentScaleX = lerp(currentScaleX, 1, 0.18);
-        currentScaleY = lerp(currentScaleY, 1, 0.18);
+        currentScaleX = lerp(currentScaleX, 1, 0.25);
+        currentScaleY = lerp(currentScaleY, 1, 0.25);
       }
 
       // 6. Opacity lerp (smooth fade in/out)
-      opacity = lerp(opacity, targetOpacity, 0.18);
+      opacity = lerp(opacity, targetOpacity, 0.25);
       if (Math.abs(targetOpacity - opacity) < 0.005) {
         opacity = targetOpacity;
       }
 
       updateDOM();
 
-      // 7. Loop management: if fully hidden and settled, suspend RAF to conserve CPU
-      if (targetOpacity === 0 && opacity === 0) {
+      // 7. Loop management: suspend RAF when stationary to conserve 100% CPU
+      const isResting =
+        Math.abs(followerX - targetFollowerX) < 0.2 &&
+        Math.abs(followerY - targetFollowerY) < 0.2 &&
+        Math.abs(currentScaleX - 1) < 0.01 &&
+        Math.abs(currentScaleY - 1) < 0.01 &&
+        Math.abs(baseFollowerScale - targetFollowerScale) < 0.01 &&
+        opacity === targetOpacity;
+
+      if (isResting) {
+        followerX = targetFollowerX;
+        followerY = targetFollowerY;
+        updateDOM();
         isRafRunning = false;
         rafId = null;
         return;
@@ -206,11 +219,11 @@ export function CustomCursor() {
     const onMouseMove = (e: MouseEvent) => {
       mouseX = e.clientX;
       mouseY = e.clientY;
+      dotX = mouseX;
+      dotY = mouseY;
 
       if (!hasPositionedFirstTime) {
         hasPositionedFirstTime = true;
-        dotX = mouseX;
-        dotY = mouseY;
         followerX = mouseX;
         followerY = mouseY;
       }

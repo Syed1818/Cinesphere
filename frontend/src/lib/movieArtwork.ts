@@ -29,3 +29,9 @@ export function getPosterUrl(path: string | null | undefined): string | null {
   return `https://image.tmdb.org/t/p/w500${path}`;
 }
 
+export function getSmallPosterUrl(path: string | null | undefined): string | null {
+  if (!path) return null;
+  if (path.startsWith("http")) return path;
+  return `https://image.tmdb.org/t/p/w185${path}`;
+}
+

@@ -53,7 +53,7 @@ interface ThreeBackgroundProps {
 }
 
 export function ThreeBackground({
-  initialMode = "fluid",
+  initialMode = "nebula",
   className = "",
   showControls = false,
 }: ThreeBackgroundProps) {
@@ -65,12 +65,22 @@ export function ThreeBackground({
   useEffect(() => {
     setMounted(true);
 
-    // Load active shader mode, defaulting to fluid aura atmosphere
+    // Load active shader mode, respecting user settings and device capability
     const saved = localStorage.getItem("threeui_shader_mode") as ThreeShaderMode | null;
-    if (saved && saved !== "off") {
+    if (saved) {
       setMode(saved);
     } else {
-      setMode("fluid");
+      const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const isLowPowered =
+        (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4) ||
+        window.matchMedia("(pointer: coarse)").matches;
+
+      // On lower-end devices or reduced motion, disable 3D canvas by default for max performance
+      if (prefersReduced || isLowPowered) {
+        setMode("off");
+      } else {
+        setMode("nebula");
+      }
     }
 
     // Pause WebGL rendering loop when document is hidden (background tab/minimized)

@@ -170,18 +170,8 @@ export function ThreeCard3D({
 
     mediaQuery.addEventListener("change", handleChange);
 
-    const handleRecache = () => {
-      if (isHoveredRef.current && cardRef.current) {
-        rectRef.current = cardRef.current.getBoundingClientRect();
-      }
-    };
-    window.addEventListener("resize", handleRecache, { passive: true });
-    window.addEventListener("scroll", handleRecache, { passive: true });
-
     return () => {
       mediaQuery.removeEventListener("change", handleChange);
-      window.removeEventListener("resize", handleRecache);
-      window.removeEventListener("scroll", handleRecache);
       if (rafIdRef.current !== null) {
         cancelAnimationFrame(rafIdRef.current);
         rafIdRef.current = null;

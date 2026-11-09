@@ -33,11 +33,11 @@ export default function RootLayout({
         {/* Ambient Glowing Orbs / Glassmorphic Mesh */}
         <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
           {/* Top-Left Indigo Glow */}
-          <div className="absolute -top-32 -left-32 w-[600px] h-[600px] rounded-full bg-gradient-to-tr from-indigo-600/20 via-purple-600/10 to-transparent blur-[140px] animate-float-slow" />
+          <div className="absolute -top-32 -left-32 w-[600px] h-[600px] rounded-full bg-gradient-to-tr from-indigo-600/20 via-purple-600/10 to-transparent blur-[60px] animate-float-slow" />
           {/* Top-Right Cyan Glow */}
-          <div className="absolute top-20 -right-32 w-[550px] h-[550px] rounded-full bg-gradient-to-bl from-cyan-500/15 via-indigo-700/10 to-transparent blur-[130px] animate-float-reverse" />
+          <div className="absolute top-20 -right-32 w-[550px] h-[550px] rounded-full bg-gradient-to-bl from-cyan-500/15 via-indigo-700/10 to-transparent blur-[50px] animate-float-reverse" />
           {/* Bottom-Center Purple/Amber Glow */}
-          <div className="absolute -bottom-40 left-1/2 -translate-x-1/2 w-[700px] h-[600px] rounded-full bg-gradient-to-r from-purple-900/15 via-indigo-950/25 to-amber-600/10 blur-[160px] animate-pulse-glow" />
+          <div className="absolute -bottom-40 left-1/2 -translate-x-1/2 w-[700px] h-[600px] rounded-full bg-gradient-to-r from-purple-900/15 via-indigo-950/25 to-amber-600/10 blur-[60px] animate-pulse-glow" />
           {/* Subtle Cinema Mesh Grid */}
           <div className="absolute inset-0 bg-[linear-gradient(to_right,#1e293b0a_1px,transparent_1px),linear-gradient(to_bottom,#1e293b0a_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] opacity-40" />
         </div>
