@@ -242,23 +242,23 @@ export default function AdminDashboardPage() {
 
         <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div className="space-y-2">
-            <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full text-xs font-black bg-rose-500/20 text-rose-300 border border-rose-500/40">
+            <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full text-[11px] font-bold font-eyebrow bg-rose-500/20 text-rose-300 border border-rose-500/40">
               <ShieldCheck className="w-4 h-4 text-rose-400" />
               <span>CineSphere Root Administration Console</span>
             </div>
-            <h1 className="text-3xl font-black text-white tracking-tight">
+            <h1 className="text-3xl sm:text-4xl font-black text-white font-display tracking-tight">
               System Operations & Intelligence Control
             </h1>
-            <p className="text-xs text-slate-300">
+            <p className="text-xs sm:text-sm text-slate-300">
               Full administrative authority over movie catalog entities, user permissions, community moderation, and Custom ML model recalibration.
             </p>
           </div>
 
-          <div className="flex flex-col sm:flex-row items-center gap-3">
+          <div className="flex flex-col sm:flex-row items-center gap-2.5">
             <button
               onClick={handleRetrainML}
               disabled={isRetraining}
-              className="w-full sm:w-auto px-5 py-2.5 rounded-xl three-liquid-metal-btn text-white text-xs font-bold shadow-lg flex items-center justify-center space-x-2 transition-all hover:scale-105 disabled:opacity-50"
+              className="w-full sm:w-auto h-11 px-5 rounded-full three-liquid-metal-btn text-white text-xs font-bold shadow-lg flex items-center justify-center space-x-2 transition-all hover:scale-105 active:scale-95 disabled:opacity-50"
             >
               <RefreshCw className={`w-4 h-4 ${isRetraining ? "animate-spin text-indigo-400" : "text-indigo-400"}`} />
               <span>{isRetraining ? "Recalibrating Vectors..." : "Retrain ML Engine"}</span>
@@ -266,7 +266,7 @@ export default function AdminDashboardPage() {
 
             <button
               onClick={() => setShowAddMovieModal(true)}
-              className="w-full sm:w-auto px-5 py-2.5 rounded-xl three-liquid-metal-btn text-white text-xs font-bold shadow-lg flex items-center justify-center space-x-2 transition-all hover:scale-105"
+              className="w-full sm:w-auto h-11 px-5 rounded-full three-liquid-metal-btn text-white text-xs font-bold shadow-lg flex items-center justify-center space-x-2 transition-all hover:scale-105 active:scale-95"
             >
               <Plus className="w-4 h-4 text-rose-400" />
               <span>Add New Film</span>
@@ -357,12 +357,12 @@ export default function AdminDashboardPage() {
       </div>
 
       {/* Tabs Navigation */}
-      <div className="flex items-center space-x-3 border-b border-white/5 pb-3">
+      <div className="flex items-center space-x-2.5 border-b border-white/5 pb-3 overflow-x-auto scrollbar-none">
         <button
           onClick={() => setActiveTab("overview")}
-          className={`px-5 py-2.5 rounded-2xl text-xs font-bold flex items-center space-x-2 transition-all ${
+          className={`h-10 px-5 rounded-full text-xs font-semibold whitespace-nowrap flex items-center space-x-2 transition-all active:scale-95 ${
             activeTab === "overview"
-              ? "glass-pill-active"
+              ? "glass-pill-active shadow-md"
               : "glass-pill text-slate-400 hover:text-white"
           }`}
         >
@@ -372,9 +372,9 @@ export default function AdminDashboardPage() {
 
         <button
           onClick={() => setActiveTab("movies")}
-          className={`px-5 py-2.5 rounded-2xl text-xs font-bold flex items-center space-x-2 transition-all ${
+          className={`h-10 px-5 rounded-full text-xs font-semibold whitespace-nowrap flex items-center space-x-2 transition-all active:scale-95 ${
             activeTab === "movies"
-              ? "glass-pill-active"
+              ? "glass-pill-active shadow-md"
               : "glass-pill text-slate-400 hover:text-white"
           }`}
         >
@@ -384,9 +384,9 @@ export default function AdminDashboardPage() {
 
         <button
           onClick={() => setActiveTab("users")}
-          className={`px-5 py-2.5 rounded-2xl text-xs font-bold flex items-center space-x-2 transition-all ${
+          className={`h-10 px-5 rounded-full text-xs font-semibold whitespace-nowrap flex items-center space-x-2 transition-all active:scale-95 ${
             activeTab === "users"
-              ? "glass-pill-active"
+              ? "glass-pill-active shadow-md"
               : "glass-pill text-slate-400 hover:text-white"
           }`}
         >
@@ -396,9 +396,9 @@ export default function AdminDashboardPage() {
 
         <button
           onClick={() => setActiveTab("reviews")}
-          className={`px-5 py-2.5 rounded-2xl text-xs font-bold flex items-center space-x-2 transition-all ${
+          className={`h-10 px-5 rounded-full text-xs font-semibold whitespace-nowrap flex items-center space-x-2 transition-all active:scale-95 ${
             activeTab === "reviews"
-              ? "glass-pill-active"
+              ? "glass-pill-active shadow-md"
               : "glass-pill text-slate-400 hover:text-white"
           }`}
         >

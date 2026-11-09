@@ -299,12 +299,12 @@ export default function ProfilePage() {
       </div>
 
       {/* Tabs Navigation */}
-      <div className="flex items-center space-x-3 border-b border-white/5 pb-3">
+      <div className="flex items-center space-x-2.5 border-b border-white/5 pb-3 overflow-x-auto scrollbar-none">
         <button
           onClick={() => setActiveTab("ratings")}
-          className={`px-5 py-2.5 rounded-2xl text-xs font-bold flex items-center space-x-2 transition-all duration-300 ${
+          className={`h-10 px-5 rounded-full text-xs font-semibold whitespace-nowrap flex items-center space-x-2 transition-all active:scale-95 ${
             activeTab === "ratings"
-              ? "glass-pill-active"
+              ? "glass-pill-active shadow-md"
               : "glass-pill text-slate-400 hover:text-white"
           }`}
         >
@@ -314,9 +314,9 @@ export default function ProfilePage() {
 
         <button
           onClick={() => setActiveTab("watchlists")}
-          className={`px-5 py-2.5 rounded-2xl text-xs font-bold flex items-center space-x-2 transition-all duration-300 ${
+          className={`h-10 px-5 rounded-full text-xs font-semibold whitespace-nowrap flex items-center space-x-2 transition-all active:scale-95 ${
             activeTab === "watchlists"
-              ? "glass-pill-active"
+              ? "glass-pill-active shadow-md"
               : "glass-pill text-slate-400 hover:text-white"
           }`}
         >
@@ -326,9 +326,9 @@ export default function ProfilePage() {
 
         <button
           onClick={() => setActiveTab("taste")}
-          className={`px-5 py-2.5 rounded-2xl text-xs font-bold flex items-center space-x-2 transition-all duration-300 ${
+          className={`h-10 px-5 rounded-full text-xs font-semibold whitespace-nowrap flex items-center space-x-2 transition-all active:scale-95 ${
             activeTab === "taste"
-              ? "glass-pill-active"
+              ? "glass-pill-active shadow-md"
               : "glass-pill text-slate-400 hover:text-white"
           }`}
         >
@@ -600,7 +600,7 @@ export default function ProfilePage() {
                   maxLength={100}
                   value={editDisplayName}
                   onChange={(e) => setEditDisplayName(e.target.value)}
-                  className="glass-input w-full px-3.5 py-2.5 rounded-xl text-sm text-slate-200 focus:outline-none"
+                  className="glass-input w-full h-11 px-3.5 rounded-xl text-sm text-slate-200 focus:outline-none"
                 />
               </div>
 
@@ -614,7 +614,7 @@ export default function ProfilePage() {
                   placeholder="Share your favorite directors, cinematic eras, or genres..."
                   value={editBio}
                   onChange={(e) => setEditBio(e.target.value)}
-                  className="glass-input w-full px-3.5 py-2.5 rounded-xl text-sm text-slate-200 focus:outline-none resize-none"
+                  className="glass-input w-full p-3.5 rounded-xl text-sm text-slate-200 placeholder-slate-500 focus:outline-none resize-none"
                 />
               </div>
 
@@ -631,7 +631,7 @@ export default function ProfilePage() {
                         key={g.id}
                         type="button"
                         onClick={() => toggleGenreSelection(g.id)}
-                        className={`px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center space-x-1.5 transition-all ${
+                        className={`h-8 px-3 rounded-full text-xs font-semibold flex items-center space-x-1.5 transition-all active:scale-95 ${
                           selected
                             ? "glass-pill-active scale-105"
                             : "glass-pill text-slate-400 hover:text-white"
@@ -645,18 +645,18 @@ export default function ProfilePage() {
                 </div>
               </div>
 
-              <div className="flex items-center justify-end space-x-3 pt-4 border-t border-white/5">
+              <div className="flex items-center justify-end space-x-2.5 pt-4 border-t border-white/5">
                 <button
                   type="button"
                   onClick={() => setShowEditModal(false)}
-                  className="px-4 py-2 text-xs font-bold text-slate-400 hover:text-white"
+                  className="h-10 px-4 rounded-full glass-pill text-xs font-semibold text-slate-400 hover:text-white transition-all active:scale-95"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={isSaving}
-                  className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-bold text-xs shadow-lg shadow-indigo-600/30 transition-all hover:scale-105 disabled:opacity-50"
+                  className="h-10 px-6 rounded-full three-liquid-metal-btn text-white font-bold text-xs shadow-lg shadow-indigo-600/30 transition-all hover:scale-105 active:scale-95 disabled:opacity-50"
                 >
                   {isSaving ? "Saving..." : "Save Changes"}
                 </button>
