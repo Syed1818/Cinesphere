@@ -27,16 +27,11 @@ import {
 } from "lucide-react";
 import { WatchlistButton } from "@/components/WatchlistButton";
 import { GsapStagger } from "@/components/GsapStagger";
-import { getPosterUrl as getSharedPosterUrl, getSmallPosterUrl } from "@/lib/movieArtwork";
+import { getPosterUrl as getSharedPosterUrl } from "@/lib/movieArtwork";
 
 function getPosterUrl(path: string | null | undefined): string {
   const shared = getSharedPosterUrl(path);
   return shared || "https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&w=500&q=80";
-}
-
-function getMarqueePosterUrl(path: string | null | undefined): string {
-  const shared = getSmallPosterUrl(path);
-  return shared || "https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&w=300&q=70";
 }
 
 function getBackdropUrl(path: string | null | undefined): string {
@@ -48,6 +43,7 @@ function getBackdropUrl(path: string | null | undefined): string {
 export default function HomePage() {
   const { user } = useAuth();
   const [trending, setTrending] = useState<MovieSummary[]>([]);
+  const [catalogMovies, setCatalogMovies] = useState<MovieSummary[]>([]);
   const [topRated, setTopRated] = useState<MovieSummary[]>([]);
   const [recommendations, setRecommendations] = useState<RecommendationItem[]>([]);
   const [genres, setGenres] = useState<Genre[]>([]);
@@ -79,13 +75,15 @@ export default function HomePage() {
     async function loadHomeData() {
       setIsLoading(true);
       try {
-        const [trendingData, topRatedData, genresData] = await Promise.all([
+        const [trendingData, catalogData, topRatedData, genresData] = await Promise.all([
           api.getTrending(20).catch(() => []),
+          api.getMovies({ limit: 60, sort: "popularity" }).catch(() => ({ items: [] })),
           api.getMovies({ limit: 10, sort: "vote_average" }).catch(() => ({ items: [] })),
           api.getGenres().catch(() => []),
         ]);
 
         setTrending(trendingData);
+        setCatalogMovies(catalogData.items || []);
         setTopRated(topRatedData.items || []);
         setGenres(genresData);
 
@@ -215,11 +213,12 @@ export default function HomePage() {
 
   const currentMovie = spotlightSlides[activeSlide] || null;
 
-  // Lightweight decorative poster strip for background atmosphere (5 movies per row, 15 total)
-  const bgMovies = trending.slice(0, 15);
-  const row1 = bgMovies.slice(0, 5);
-  const row2 = bgMovies.slice(5, 10);
-  const row3 = bgMovies.slice(10, 15);
+  // Split catalog movies into 3 distinct rows for infinite background marquee carousel
+  const allImagesMovies = catalogMovies.length > 0 ? catalogMovies : trending;
+  const rowCount = Math.max(1, Math.floor(allImagesMovies.length / 3));
+  const row1 = allImagesMovies.slice(0, rowCount);
+  const row2 = allImagesMovies.slice(rowCount, rowCount * 2);
+  const row3 = allImagesMovies.slice(rowCount * 2);
 
   return (
     <div className="relative space-y-16">
@@ -227,24 +226,24 @@ export default function HomePage() {
       {/* 1. DYNAMIC BACKGROUND MOVIE POSTER WALL & MARQUEE CAROUSEL               */}
       {/* ========================================================================= */}
       <div
-        className="marquee-container absolute top-[-3rem] left-1/2 -translate-x-1/2 w-screen max-w-none overflow-hidden -z-10 pointer-events-none opacity-35 select-none"
+        className="marquee-container absolute top-[-3rem] left-1/2 -translate-x-1/2 w-screen max-w-none overflow-hidden -z-10 pointer-events-none opacity-65 select-none"
         aria-hidden="true"
       >
-        <div className="relative w-full h-[800px] overflow-hidden flex flex-col justify-around py-4">
+        <div className="relative w-full h-[880px] overflow-hidden flex flex-col justify-around py-4 rotate-[-1.5deg] scale-105 transform-gpu">
           {/* Row 1: Drift Left */}
           {row1.length > 0 && (
-            <div className="marquee-row pointer-events-auto flex animate-marquee-slow whitespace-nowrap gap-4 will-change-transform">
+            <div className="marquee-row pointer-events-auto flex animate-marquee-slow whitespace-nowrap gap-4 will-change-transform transform-gpu">
               {[...row1, ...row1].map((movie, idx) => (
                 <div
                   key={`row1-${movie.id}-${idx}`}
-                  className="marquee-card w-28 sm:w-36 h-40 sm:h-52 rounded-2xl overflow-hidden bg-slate-900/50 shrink-0 border border-white/10 shadow-lg relative"
+                  className="marquee-card w-32 sm:w-40 h-48 sm:h-60 rounded-2xl overflow-hidden bg-slate-900/50 shrink-0 border border-white/10 shadow-lg relative will-change-transform"
                 >
                   <Image
-                    src={getMarqueePosterUrl(movie.poster_path)}
+                    src={getPosterUrl(movie.poster_path)}
                     alt=""
                     fill
                     loading="lazy"
-                    sizes="140px"
+                    sizes="(max-width: 640px) 128px, 160px"
                     className="object-cover"
                     unoptimized
                   />
@@ -256,18 +255,18 @@ export default function HomePage() {
 
           {/* Row 2: Drift Right */}
           {row2.length > 0 && (
-            <div className="marquee-row pointer-events-auto flex animate-marquee-reverse whitespace-nowrap gap-4 will-change-transform">
+            <div className="marquee-row pointer-events-auto flex animate-marquee-reverse whitespace-nowrap gap-4 will-change-transform transform-gpu">
               {[...row2, ...row2].map((movie, idx) => (
                 <div
                   key={`row2-${movie.id}-${idx}`}
-                  className="marquee-card w-28 sm:w-36 h-40 sm:h-52 rounded-2xl overflow-hidden bg-slate-900/50 shrink-0 border border-white/10 shadow-lg relative"
+                  className="marquee-card w-32 sm:w-40 h-48 sm:h-60 rounded-2xl overflow-hidden bg-slate-900/50 shrink-0 border border-white/10 shadow-lg relative will-change-transform"
                 >
                   <Image
-                    src={getMarqueePosterUrl(movie.poster_path)}
+                    src={getPosterUrl(movie.poster_path)}
                     alt=""
                     fill
                     loading="lazy"
-                    sizes="140px"
+                    sizes="(max-width: 640px) 128px, 160px"
                     className="object-cover"
                     unoptimized
                   />
@@ -279,18 +278,18 @@ export default function HomePage() {
 
           {/* Row 3: Drift Left */}
           {row3.length > 0 && (
-            <div className="marquee-row pointer-events-auto flex animate-marquee-slow whitespace-nowrap gap-4 will-change-transform">
+            <div className="marquee-row pointer-events-auto flex animate-marquee-slow whitespace-nowrap gap-4 will-change-transform transform-gpu">
               {[...row3, ...row3].map((movie, idx) => (
                 <div
                   key={`row3-${movie.id}-${idx}`}
-                  className="marquee-card w-28 sm:w-36 h-40 sm:h-52 rounded-2xl overflow-hidden bg-slate-900/50 shrink-0 border border-white/10 shadow-lg relative"
+                  className="marquee-card w-32 sm:w-40 h-48 sm:h-60 rounded-2xl overflow-hidden bg-slate-900/50 shrink-0 border border-white/10 shadow-lg relative will-change-transform"
                 >
                   <Image
-                    src={getMarqueePosterUrl(movie.poster_path)}
+                    src={getPosterUrl(movie.poster_path)}
                     alt=""
                     fill
                     loading="lazy"
-                    sizes="140px"
+                    sizes="(max-width: 640px) 128px, 160px"
                     className="object-cover"
                     unoptimized
                   />
@@ -301,8 +300,8 @@ export default function HomePage() {
           )}
 
           {/* Transparent Vignette Overlays over the Background Carousel */}
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#070a12]/30 to-transparent pointer-events-none" />
-          <div className="absolute inset-0 bg-radial-at-c from-transparent via-transparent to-[#070a12]/50 pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#070a12]/20 to-transparent pointer-events-none" />
+          <div className="absolute inset-0 bg-radial-at-c from-transparent via-transparent to-[#070a12]/40 pointer-events-none" />
         </div>
       </div>
 
