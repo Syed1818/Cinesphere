@@ -317,7 +317,7 @@ export default function HomePage() {
           onKeyDown={handleHeroKeyDown}
           onMouseEnter={handleHeroMouseEnter}
           onMouseLeave={handleHeroMouseLeave}
-          className="relative rounded-3xl overflow-hidden hero-glass-card shadow-2xl border border-white/20 min-h-[540px] md:min-h-[580px] flex items-end p-6 sm:p-10 md:p-14 group focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/50 backdrop-blur-[36px]"
+          className="relative rounded-3xl overflow-hidden glass-card shadow-2xl border border-white/15 min-h-[540px] md:min-h-[580px] flex items-end p-6 sm:p-10 md:p-14 group focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/50"
         >
           {/* Background Backdrop Image Slides with Buttery Crossfade & Ken Burns Slow Zoom */}
           {spotlightSlides.map((slide, idx) => {
@@ -329,7 +329,7 @@ export default function HomePage() {
               <div
                 key={`slide-bg-${slide.id}`}
                 className={`absolute inset-0 transition-[opacity,filter] duration-700 ease-out ${
-                  isSlideActive ? "opacity-60 blur-[1.5px] z-[1]" : "opacity-0 blur-md z-0 pointer-events-none"
+                  isSlideActive ? "opacity-95 blur-[2.5px] z-[1]" : "opacity-0 blur-md z-0 pointer-events-none"
                 }`}
               >
                 {!hasError && (
@@ -356,8 +356,8 @@ export default function HomePage() {
           })}
 
           {/* Transparent Cinema Vignette Gradients */}
-          <div className="absolute inset-0 bg-gradient-to-t from-[#070a12]/85 via-[#070a12]/35 to-transparent z-1 pointer-events-none" />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#070a12]/85 via-[#070a12]/40 to-transparent z-1 pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#070a12]/90 via-[#070a12]/30 to-transparent z-[2] pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#070a12]/90 via-[#070a12]/30 to-transparent z-[2] pointer-events-none" />
 
           {/* Top-Right Slideshow Controls & Pause Button */}
           <div className="absolute top-6 right-6 z-20 flex items-center space-x-2">
@@ -389,8 +389,8 @@ export default function HomePage() {
             </button>
           </div>
 
-          {/* Main Hero Content Box with Soft Glassmorphic Backdrop Plinth */}
-          <div className="relative z-10 max-w-2xl space-y-4 sm:space-y-5 p-4 sm:p-6 md:p-8 rounded-3xl bg-slate-950/40 backdrop-blur-xl border border-white/10 shadow-2xl">
+          {/* Main Hero Content Box */}
+          <div className="relative z-10 max-w-2xl space-y-4 sm:space-y-5">
             <div className="flex flex-wrap items-center gap-2.5">
               <span className="three-badge-shimmer px-3.5 py-1 rounded-full text-xs font-black uppercase tracking-wider text-amber-300 flex items-center space-x-1.5 shadow-lg shadow-amber-500/10">
                 <Sparkles className="w-3.5 h-3.5 text-amber-400" />
