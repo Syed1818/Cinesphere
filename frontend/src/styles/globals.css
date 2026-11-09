@@ -275,8 +275,8 @@ html.has-custom-cursor [contenteditable="true"] {
 
 [data-card="true"] {
   transform-style: preserve-3d;
-  backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
 }
 
 [data-card="true"] .glass-card-hover:hover {
