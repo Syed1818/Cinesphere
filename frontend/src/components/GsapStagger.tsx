@@ -21,10 +21,10 @@ export function GsapStagger({
   children,
   className = "",
   selector = "> *",
-  stagger = 0.05,
-  duration = 0.55,
-  yOffset = 20,
-  delay = 0.05,
+  stagger = 0.035,
+  duration = 0.32,
+  yOffset = 12,
+  delay = 0.04,
 }: GsapStaggerProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const childCount = React.Children.count(children);
@@ -38,6 +38,11 @@ export function GsapStagger({
     if (hasAnimatedRef.current) return;
     hasAnimatedRef.current = true;
 
+    // Emil Kowalski: Check prefers-reduced-motion to drop movement if sensitive
+    const prefersReducedMotion =
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
     const ctx = gsap.context(() => {
       const targets =
         !selector || selector === "> *"
@@ -50,17 +55,17 @@ export function GsapStagger({
         targets,
         {
           opacity: 0,
-          y: yOffset,
-          scale: 0.98,
+          y: prefersReducedMotion ? 0 : yOffset,
+          scale: prefersReducedMotion ? 1 : 0.97,
         },
         {
           opacity: 1,
           y: 0,
           scale: 1,
-          duration,
-          stagger,
+          duration: prefersReducedMotion ? 0.2 : duration,
+          stagger: prefersReducedMotion ? 0 : stagger,
           delay,
-          ease: "power2.out",
+          ease: "power3.out",
           clearProps: "transform,opacity",
         }
       );

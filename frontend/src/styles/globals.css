@@ -5,6 +5,10 @@
 :root {
   --background: #070a12;
   --foreground: #f8fafc;
+  /* Emil Kowalski: Strong, punchy custom easing curves */
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 html {
@@ -55,7 +59,7 @@ body {
   backdrop-filter: blur(16px);
   border: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.25);
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 220ms var(--ease-out), border-color 180ms ease, box-shadow 220ms var(--ease-out);
 }
 
 .glass-card-hover:hover {
@@ -78,7 +82,25 @@ body {
   -webkit-backdrop-filter: blur(12px);
   backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.08);
-  transition: all 0.2s ease;
+  transition: transform 160ms var(--ease-out), background-color 160ms ease, border-color 160ms ease;
+}
+
+.glass-pill:hover {
+  border-color: rgba(255, 255, 255, 0.2);
+  background: rgba(51, 65, 85, 0.4);
+}
+
+.glass-pill:active {
+  transform: scale(0.97);
+}
+
+/* Emil Kowalski: Buttons must feel responsive with subtle scale feedback on press */
+button:active:not(:disabled),
+a.btn:active,
+.btn:active,
+.interactive-tap:active {
+  transform: scale(0.97);
+  transition: transform 100ms var(--ease-out);
 }
 
 /* Eliminate redundant nested multi-pass blur on glass children */
@@ -163,7 +185,7 @@ body {
   background: linear-gradient(135deg, #1e1e2f 0%, #2a2a40 50%, #151522 100%);
   border: 1px solid rgba(255, 255, 255, 0.15);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.3), inset 0 -1px 0 rgba(0, 0, 0, 0.4);
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 160ms var(--ease-out), border-color 160ms ease, box-shadow 160ms var(--ease-out);
   overflow: hidden;
 }
 
@@ -176,7 +198,7 @@ body {
   height: 100%;
   background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.15) 50%, transparent 100%);
   transform: skewX(-25deg);
-  transition: transform 0.75s ease;
+  transition: transform 0.65s var(--ease-out);
   pointer-events: none;
 }
 
@@ -188,6 +210,11 @@ body {
   transform: translateY(-2px) scale(1.02);
   border-color: rgba(168, 85, 247, 0.6);
   box-shadow: 0 10px 30px -5px rgba(129, 140, 248, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.5);
+}
+
+.three-liquid-metal-btn:active {
+  transform: translateY(0) scale(0.97);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
 }
 
 .three-badge-shimmer {

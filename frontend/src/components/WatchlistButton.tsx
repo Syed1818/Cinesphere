@@ -64,14 +64,14 @@ export function WatchlistButton({
       onClick={toggleWatchlist}
       disabled={isSubmitting}
       title={inWatchlist ? "Remove from Watchlist" : "Add to Watchlist"}
-      className={`rounded-full flex items-center justify-center transition-all duration-300 backdrop-blur-xl active:scale-95 hover:scale-110 ${
+      className={`rounded-full flex items-center justify-center transition-[transform,background-color,border-color,box-shadow] duration-150 ease-out active:scale-[0.96] hover:scale-105 ${
         inWatchlist
           ? "bg-amber-500/25 text-amber-300 border border-amber-400/50 shadow-lg shadow-amber-500/20 hover:bg-amber-500/35"
           : "glass-pill text-gray-300 hover:text-white hover:border-white/30 hover:bg-white/10"
       } ${sizeClasses[size]} ${className}`}
     >
       <Bookmark
-        className={`w-4 h-4 transition-transform ${
+        className={`w-4 h-4 transition-transform duration-200 ease-out ${
           inWatchlist ? "fill-amber-400 text-amber-400 scale-110" : ""
         }`}
       />

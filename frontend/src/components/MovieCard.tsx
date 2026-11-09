@@ -42,7 +42,7 @@ export function MovieCard({ movie }: MovieCardProps) {
               sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
               onLoad={() => setIsLoaded(true)}
               onError={() => setImgError(true)}
-              className={`object-cover transition-all duration-700 ease-out group-hover:scale-105 ${
+              className={`object-cover transition-[transform,opacity] duration-300 ease-out group-hover:scale-105 ${
                 isLoaded ? "opacity-100" : "opacity-0"
               }`}
               unoptimized

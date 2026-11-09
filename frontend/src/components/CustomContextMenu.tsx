@@ -58,15 +58,15 @@ export function CustomContextMenu() {
   const burstContainerRef = useRef<HTMLDivElement>(null);
   const shockwaveRef = useRef<HTMLDivElement>(null);
 
-  // Close context menu handler
+  // Close context menu handler (Emil Kowalski: exit gently to scale 0.96 with fast 140ms duration)
   const handleClose = useCallback(() => {
     if (!isOpen) return;
     if (wheelRef.current) {
       gsap.to(wheelRef.current, {
-        scale: 0.4,
+        scale: 0.96,
         opacity: 0,
-        duration: 0.18,
-        ease: "power2.in",
+        duration: 0.14,
+        ease: "power2.out",
         onComplete: () => {
           setIsOpen(false);
           setHoveredOption(null);
@@ -114,7 +114,7 @@ export function CustomContextMenu() {
     };
   }, [handleClose]);
 
-  // Animate wheel entrance when opened
+  // Animate wheel entrance when opened (Emil Kowalski: never scale(0), sub-220ms, punchy ease-out)
   useEffect(() => {
     if (isOpen && wheelRef.current) {
       const wheel = wheelRef.current;
@@ -123,23 +123,23 @@ export function CustomContextMenu() {
 
       gsap.killTweensOf([wheel, items, quickBar]);
 
-      // Pop in the whole container with elastic spring
+      // Pop in the whole container from scale 0.94 (organic shape presence, no popping from absolute zero)
       gsap.fromTo(
         wheel,
-        { scale: 0.2, opacity: 0 },
-        { scale: 1, opacity: 1, duration: 0.35, ease: "back.out(2)" }
+        { scale: 0.94, opacity: 0 },
+        { scale: 1, opacity: 1, duration: 0.22, ease: "back.out(1.2)" }
       );
 
-      // Radial stagger expansion for emoji petals
+      // Radial stagger expansion for emoji petals from scale 0.92
       gsap.fromTo(
         items,
-        { scale: 0, opacity: 0 },
+        { scale: 0.92, opacity: 0 },
         {
           scale: 1,
           opacity: 1,
-          duration: 0.35,
-          stagger: 0.025,
-          ease: "back.out(2.2)",
+          duration: 0.20,
+          stagger: 0.015,
+          ease: "power3.out",
         }
       );
 
@@ -147,8 +147,8 @@ export function CustomContextMenu() {
       if (quickBar) {
         gsap.fromTo(
           quickBar,
-          { y: -10, opacity: 0 },
-          { y: 0, opacity: 1, duration: 0.25, delay: 0.15, ease: "power2.out" }
+          { y: -6, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.18, delay: 0.08, ease: "power3.out" }
         );
       }
     }

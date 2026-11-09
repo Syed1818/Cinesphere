@@ -328,8 +328,8 @@ export default function HomePage() {
             return (
               <div
                 key={`slide-bg-${slide.id}`}
-                className={`absolute inset-0 transition-opacity duration-700 ease-in-out ${
-                  isSlideActive ? "opacity-60 z-[1]" : "opacity-0 z-0 pointer-events-none"
+                className={`absolute inset-0 transition-[opacity,filter] duration-700 ease-out ${
+                  isSlideActive ? "opacity-60 blur-none z-[1]" : "opacity-0 blur-sm z-0 pointer-events-none"
                 }`}
               >
                 {!hasError && (
