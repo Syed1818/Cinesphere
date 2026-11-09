@@ -75,7 +75,7 @@ export function Navbar() {
                 placeholder="Search catalog, directors, actors..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-16 py-2 glass-input rounded-full text-sm text-slate-100 placeholder-slate-400 focus:outline-none focus:border-indigo-500/60 focus:ring-1 focus:ring-indigo-500/40 transition-all"
+                className="w-full pl-10 pr-16 py-2 bg-slate-900/80 border border-white/15 focus:border-indigo-400 focus:bg-slate-900 rounded-full text-sm text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-indigo-400/50 shadow-inner transition-all"
               />
               <div className="absolute right-3 top-1/2 -translate-y-1/2 px-1.5 py-0.5 rounded text-[10px] font-mono text-slate-400 bg-white/5 border border-white/10 pointer-events-none">
                 ⌘K
@@ -96,8 +96,8 @@ export function Navbar() {
                     isActive
                       ? "glass-pill-active shadow-lg shadow-indigo-500/25"
                       : item.highlight
-                      ? "text-indigo-400 hover:text-white glass-pill hover:border-indigo-500/40"
-                      : "text-slate-300 hover:text-white glass-pill"
+                      ? "text-indigo-300 hover:text-white glass-pill hover:border-indigo-500/40 bg-indigo-950/20"
+                      : "text-slate-200 hover:text-white glass-pill hover:bg-white/10"
                   }`}
                 >
                   <Icon className={`w-3.5 h-3.5 ${item.highlight && !isActive ? "text-indigo-400" : ""}`} />
@@ -174,7 +174,7 @@ export function Navbar() {
 
         {/* Mobile Dropdown Menu */}
         {mobileMenuOpen && (
-          <div className="md:hidden py-4 border-t border-white/10 space-y-3 glass-card rounded-2xl my-2 p-4 animate-in fade-in slide-in-from-top-2 duration-200">
+          <div className="md:hidden py-4 border-t border-white/10 space-y-3 bg-[#070a12]/95 backdrop-blur-3xl rounded-2xl my-2 p-4 shadow-2xl border border-white/15 animate-in fade-in slide-in-from-top-2 duration-200">
             <form onSubmit={handleSearch} className="relative w-full">
               <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
               <input
@@ -182,7 +182,7 @@ export function Navbar() {
                 placeholder="Search catalog..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 glass-input rounded-full text-sm text-slate-100 placeholder-slate-400 focus:outline-none"
+                className="w-full pl-10 pr-4 py-2 bg-slate-900/80 border border-white/15 focus:border-indigo-400 rounded-full text-sm text-slate-100 placeholder-slate-400 focus:outline-none"
               />
             </form>
 
