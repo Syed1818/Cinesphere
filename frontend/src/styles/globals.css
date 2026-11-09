@@ -413,7 +413,35 @@ html.has-custom-cursor [contenteditable="true"] {
   animation-play-state: paused;
 }
 
-/* Reduced motion preference disables infinite marquee drift */
+/* -------------------------------------------------------------------------- */
+/* HERO SPOTLIGHT SLIDESHOW PROGRESS & KEN BURNS ZOOM                         */
+/* -------------------------------------------------------------------------- */
+
+@keyframes slide-progress {
+  0% {
+    transform: scaleX(0);
+  }
+  100% {
+    transform: scaleX(1);
+  }
+}
+
+.animate-slide-progress {
+  transform-origin: left center;
+  animation: slide-progress 5.5s linear forwards;
+  will-change: transform;
+}
+
+.animate-slide-progress.is-paused {
+  animation-play-state: paused;
+}
+
+.hero-backdrop-zoom {
+  transition: transform 6s cubic-bezier(0.25, 1, 0.5, 1);
+  will-change: transform;
+}
+
+/* Reduced motion preference disables infinite marquee drift and timer transitions */
 @media (prefers-reduced-motion: reduce) {
   .animate-marquee,
   .animate-marquee-slow,
@@ -430,5 +458,15 @@ html.has-custom-cursor [contenteditable="true"] {
 
   .marquee-card:hover {
     transform: none !important;
+  }
+
+  .animate-slide-progress {
+    animation: none !important;
+    transform: scaleX(1) !important;
+  }
+
+  .hero-backdrop-zoom {
+    transform: none !important;
+    transition: none !important;
   }
 }

@@ -50,9 +50,26 @@ export default function HomePage() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   // Hero Spotlight Slideshow state
+  const SLIDE_DURATION = 5500;
   const [activeSlide, setActiveSlide] = useState<number>(0);
   const [isPaused, setIsPaused] = useState<boolean>(false);
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState<boolean>(false);
   const [backdropImgError, setBackdropImgError] = useState<Record<number, boolean>>({});
+
+  const remainingTimeRef = useRef<number>(SLIDE_DURATION);
+  const slideStartTimeRef = useRef<number>(Date.now());
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Check prefers-reduced-motion accessibility preference
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    setPrefersReducedMotion(mediaQuery.matches);
+
+    const handler = (e: MediaQueryListEvent) => setPrefersReducedMotion(e.matches);
+    mediaQuery.addEventListener("change", handler);
+    return () => mediaQuery.removeEventListener("change", handler);
+  }, []);
 
   useEffect(() => {
     async function loadHomeData() {
@@ -89,49 +106,110 @@ export default function HomePage() {
   // Spotlight Slideshow items (top 7 trending movies)
   const spotlightSlides = trending.slice(0, 7);
 
-  // Auto-advance slideshow timer
+  // Auto-advance slideshow callbacks
   const nextSlide = useCallback(() => {
     if (spotlightSlides.length === 0) return;
     setActiveSlide((prev) => (prev + 1) % spotlightSlides.length);
+    remainingTimeRef.current = SLIDE_DURATION;
+    slideStartTimeRef.current = Date.now();
   }, [spotlightSlides.length]);
 
   const prevSlide = useCallback(() => {
     if (spotlightSlides.length === 0) return;
     setActiveSlide((prev) => (prev - 1 + spotlightSlides.length) % spotlightSlides.length);
+    remainingTimeRef.current = SLIDE_DURATION;
+    slideStartTimeRef.current = Date.now();
   }, [spotlightSlides.length]);
 
-  useEffect(() => {
-    if (isPaused || spotlightSlides.length <= 1) return;
+  const selectSlide = useCallback((index: number) => {
+    setActiveSlide(index);
+    remainingTimeRef.current = SLIDE_DURATION;
+    slideStartTimeRef.current = Date.now();
+  }, []);
 
-    let interval: NodeJS.Timeout | null = null;
+  const togglePause = useCallback(() => {
+    setIsPaused((prev) => {
+      if (!prev) {
+        const elapsed = Date.now() - slideStartTimeRef.current;
+        remainingTimeRef.current = Math.max(500, remainingTimeRef.current - elapsed);
+      } else {
+        slideStartTimeRef.current = Date.now();
+      }
+      return !prev;
+    });
+  }, []);
 
-    const startTimer = () => {
-      if (interval) clearInterval(interval);
-      interval = setInterval(() => {
-        if (typeof document !== "undefined" && document.visibilityState === "visible") {
-          nextSlide();
+  const handleHeroMouseEnter = useCallback(() => {
+    setIsPaused(true);
+    const elapsed = Date.now() - slideStartTimeRef.current;
+    remainingTimeRef.current = Math.max(500, remainingTimeRef.current - elapsed);
+  }, []);
+
+  const handleHeroMouseLeave = useCallback(() => {
+    slideStartTimeRef.current = Date.now();
+    setIsPaused(false);
+  }, []);
+
+  const handleHeroKeyDown = useCallback(
+    (e: React.KeyboardEvent<HTMLDivElement>) => {
+      if (e.key === "ArrowLeft") {
+        e.preventDefault();
+        prevSlide();
+      } else if (e.key === "ArrowRight") {
+        e.preventDefault();
+        nextSlide();
+      } else if (e.key === " " || e.key === "Enter") {
+        const target = e.target as HTMLElement;
+        if (target.tagName !== "BUTTON" && target.tagName !== "A") {
+          e.preventDefault();
+          togglePause();
         }
-      }, 5500);
+      }
+    },
+    [prevSlide, nextSlide, togglePause]
+  );
+
+  useEffect(() => {
+    if (isPaused || prefersReducedMotion || spotlightSlides.length <= 1) {
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
+        timerRef.current = null;
+      }
+      return;
+    }
+
+    slideStartTimeRef.current = Date.now();
+
+    const tick = () => {
+      if (typeof document !== "undefined" && document.visibilityState === "visible") {
+        nextSlide();
+      }
     };
 
-    startTimer();
+    timerRef.current = setTimeout(tick, remainingTimeRef.current);
 
     const handleVisibility = () => {
       if (document.visibilityState === "visible") {
-        startTimer();
-      } else if (interval) {
-        clearInterval(interval);
-        interval = null;
+        slideStartTimeRef.current = Date.now();
+        timerRef.current = setTimeout(tick, remainingTimeRef.current);
+      } else {
+        if (timerRef.current) {
+          clearTimeout(timerRef.current);
+          timerRef.current = null;
+        }
       }
     };
 
     document.addEventListener("visibilitychange", handleVisibility);
 
     return () => {
-      if (interval) clearInterval(interval);
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
+        timerRef.current = null;
+      }
       document.removeEventListener("visibilitychange", handleVisibility);
     };
-  }, [isPaused, spotlightSlides.length, nextSlide]);
+  }, [isPaused, prefersReducedMotion, activeSlide, spotlightSlides.length, nextSlide]);
 
   const currentMovie = spotlightSlides[activeSlide] || null;
 
@@ -232,11 +310,16 @@ export default function HomePage() {
       {/* ========================================================================= */}
       {currentMovie ? (
         <div
-          className="relative rounded-3xl overflow-hidden glass-card shadow-2xl border border-white/15 min-h-[540px] md:min-h-[580px] flex items-end p-6 sm:p-10 md:p-14 group"
-          onMouseEnter={() => setIsPaused(true)}
-          onMouseLeave={() => setIsPaused(false)}
+          tabIndex={0}
+          role="region"
+          aria-label="Spotlight Featured Movies Carousel"
+          aria-roledescription="carousel"
+          onKeyDown={handleHeroKeyDown}
+          onMouseEnter={handleHeroMouseEnter}
+          onMouseLeave={handleHeroMouseLeave}
+          className="relative rounded-3xl overflow-hidden glass-card shadow-2xl border border-white/15 min-h-[540px] md:min-h-[580px] flex items-end p-6 sm:p-10 md:p-14 group focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/50"
         >
-          {/* Background Backdrop Image Slides with Crossfade */}
+          {/* Background Backdrop Image Slides with Buttery Crossfade & Ken Burns Slow Zoom */}
           {spotlightSlides.map((slide, idx) => {
             const isSlideActive = idx === activeSlide;
             const hasError = backdropImgError[idx];
@@ -245,22 +328,28 @@ export default function HomePage() {
             return (
               <div
                 key={`slide-bg-${slide.id}`}
-                className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
-                  isSlideActive ? "opacity-60 z-0" : "opacity-0 -z-10 pointer-events-none"
+                className={`absolute inset-0 transition-opacity duration-700 ease-in-out ${
+                  isSlideActive ? "opacity-60 z-[1]" : "opacity-0 z-0 pointer-events-none"
                 }`}
               >
                 {!hasError && (
-                  <Image
-                    src={backdropSrc}
-                    alt={slide.title}
-                    fill
-                    priority={idx === 0}
-                    onError={() =>
-                      setBackdropImgError((prev) => ({ ...prev, [idx]: true }))
-                    }
-                    className="object-cover"
-                    unoptimized
-                  />
+                  <div
+                    className={`hero-backdrop-zoom relative w-full h-full ${
+                      isSlideActive ? "scale-100" : "scale-105"
+                    }`}
+                  >
+                    <Image
+                      src={backdropSrc}
+                      alt={slide.title}
+                      fill
+                      priority={idx === 0}
+                      onError={() =>
+                        setBackdropImgError((prev) => ({ ...prev, [idx]: true }))
+                      }
+                      className="object-cover"
+                      unoptimized
+                    />
+                  </div>
                 )}
               </div>
             );
@@ -274,7 +363,7 @@ export default function HomePage() {
           <div className="absolute top-6 right-6 z-20 flex items-center space-x-2">
             <button
               type="button"
-              onClick={() => setIsPaused(!isPaused)}
+              onClick={togglePause}
               title={isPaused ? "Resume Slideshow" : "Pause Slideshow"}
               className="p-2.5 rounded-full glass-pill hover:glass-card text-slate-300 hover:text-white transition-all shadow-md active:scale-95"
             >
@@ -284,7 +373,7 @@ export default function HomePage() {
             <button
               type="button"
               onClick={prevSlide}
-              title="Previous Slide"
+              title="Previous Slide (ArrowLeft)"
               className="p-2.5 rounded-full glass-pill hover:glass-card text-slate-300 hover:text-white transition-all shadow-md active:scale-95"
             >
               <ChevronLeft className="w-4 h-4" />
@@ -293,7 +382,7 @@ export default function HomePage() {
             <button
               type="button"
               onClick={nextSlide}
-              title="Next Slide"
+              title="Next Slide (ArrowRight)"
               className="p-2.5 rounded-full glass-pill hover:glass-card text-slate-300 hover:text-white transition-all shadow-md active:scale-95"
             >
               <ChevronRight className="w-4 h-4" />
@@ -368,20 +457,37 @@ export default function HomePage() {
               </Link>
             </div>
 
-            {/* Slide Indicator Progress Pills */}
-            <div className="flex items-center space-x-2 pt-4">
-              {spotlightSlides.map((slide, idx) => (
-                <button
-                  key={`dot-${slide.id}`}
-                  onClick={() => setActiveSlide(idx)}
-                  className={`h-2 rounded-full transition-all duration-300 ${
-                    idx === activeSlide
-                      ? "w-8 bg-gradient-to-r from-indigo-500 to-purple-500 shadow-md shadow-indigo-500/50"
-                      : "w-2 bg-white/20 hover:bg-white/40"
-                  }`}
-                  aria-label={`Go to slide ${idx + 1}: ${slide.title}`}
-                />
-              ))}
+            {/* Slide Indicator Progress Pills with Animated Timer Bar */}
+            <div className="flex items-center space-x-2 pt-4" role="tablist" aria-label="Slides">
+              {spotlightSlides.map((slide, idx) => {
+                const isCurrent = idx === activeSlide;
+                return (
+                  <button
+                    key={`dot-${slide.id}`}
+                    onClick={() => selectSlide(idx)}
+                    className={`relative h-2.5 rounded-full overflow-hidden transition-all duration-300 ${
+                      isCurrent
+                        ? "w-12 sm:w-16 bg-white/20 shadow-md shadow-indigo-500/30 ring-1 ring-white/30"
+                        : "w-3 sm:w-4 bg-white/20 hover:bg-white/40 hover:w-6"
+                    }`}
+                    aria-label={`Go to slide ${idx + 1}: ${slide.title}`}
+                    aria-selected={isCurrent}
+                    role="tab"
+                  >
+                    {isCurrent && !prefersReducedMotion && (
+                      <div
+                        key={`progress-${activeSlide}`}
+                        className={`absolute inset-0 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-full animate-slide-progress ${
+                          isPaused ? "is-paused" : ""
+                        }`}
+                      />
+                    )}
+                    {isCurrent && prefersReducedMotion && (
+                      <div className="absolute inset-0 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full" />
+                    )}
+                  </button>
+                );
+              })}
             </div>
           </div>
 
@@ -397,7 +503,7 @@ export default function HomePage() {
                 return (
                   <button
                     key={`thumb-${slide.id}`}
-                    onClick={() => setActiveSlide(idx)}
+                    onClick={() => selectSlide(idx)}
                     className={`w-full p-2 rounded-xl text-left flex items-center space-x-3 transition-all duration-200 border ${
                       isSelected
                         ? "glass-card border-indigo-500/50 bg-indigo-950/40 shadow-lg shadow-indigo-500/10 scale-[1.02]"
