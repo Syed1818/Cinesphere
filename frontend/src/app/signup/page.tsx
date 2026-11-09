@@ -186,11 +186,10 @@ export default function SignupPage() {
                     key={g.id}
                     type="button"
                     onClick={() => toggleGenre(g.id)}
-                    className={`px-3.5 py-2 rounded-xl text-xs font-bold flex items-center space-x-2 transition-all active:scale-95 ${
-                      selected
+                    className={`px-3.5 py-2 rounded-xl text-xs font-bold flex items-center space-x-2 transition-all active:scale-95 ${selected
                         ? "glass-pill-active scale-105"
                         : "glass-pill text-slate-400 hover:text-white hover:border-white/30"
-                    }`}
+                      }`}
                   >
                     {selected && <Check className="w-3.5 h-3.5 text-white" />}
                     <span>{g.name}</span>
