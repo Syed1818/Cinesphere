@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <defs>
+    <linearGradient id="cinesphere-grad" x1="4" y1="4" x2="60" y2="60" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#6366f1" />
+      <stop offset="50%" stop-color="#a855f7" />
+      <stop offset="100%" stop-color="#f59e0b" />
+    </linearGradient>
+    <linearGradient id="inner-glow" x1="16" y1="16" x2="48" y2="48" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.9" />
+      <stop offset="100%" stop-color="#cbd5e1" stop-opacity="0.3" />
+    </linearGradient>
+    <filter id="neon-glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="3" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+
+  <!-- Outer Rounded Squircle -->
+  <rect x="4" y="4" width="56" height="56" rx="16" fill="#070a12" stroke="url(#cinesphere-grad)" stroke-width="2.5" />
+
+  <!-- Ambient Glow Behind Icon -->
+  <circle cx="32" cy="32" r="18" fill="url(#cinesphere-grad)" opacity="0.25" filter="url(#neon-glow)" />
+
+  <!-- Cinema Reel / Aperture Geometric Ring -->
+  <circle cx="32" cy="32" r="16" stroke="url(#cinesphere-grad)" stroke-width="2.5" stroke-dasharray="8 4" opacity="0.85" />
+
+  <!-- Center Diamond Sparkle -->
+  <path d="M32 14L35.5 28.5L50 32L35.5 35.5L32 50L28.5 35.5L14 32L28.5 28.5Z" fill="url(#inner-glow)" filter="url(#neon-glow)" />
+
+  <!-- Core Light Pinpoint -->
+  <circle cx="32" cy="32" r="3" fill="#ffffff" />
+</svg>
+

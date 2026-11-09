@@ -1,0 +1,786 @@
+openapi: 3.1.0
+info:
+  title: Movie Recommendation Platform API
+  description: High-performance, enterprise-grade REST API for movie catalog discovery, social interactions, and hybrid personalized recommendations.
+  version: 1.0.0
+servers:
+  - url: http://localhost:4000/api/v1
+    description: Local Development Gateway
+  - url: https://api.yourmovierecs.com/api/v1
+    description: Production API Gateway
+
+paths:
+  # ============================================================================
+  # AUTHENTICATION & IDENTITY
+  # ============================================================================
+  /auth/register:
+    post:
+      summary: Register a new user
+      description: Creates a user account with email, password, and profile data. Passwords are hash-verified with Argon2id.
+      operationId: registerUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+      responses:
+        '201':
+          description: User registered successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '409':
+          description: Email or username already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /auth/login:
+    post:
+      summary: Authenticate user
+      description: Verifies credentials and returns a short-lived access JWT while setting a secure HttpOnly refresh token cookie.
+      operationId: loginUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Successfully authenticated
+          headers:
+            Set-Cookie:
+              schema:
+                type: string
+                example: refreshToken=abc-123; HttpOnly; Secure; SameSite=Strict; Path=/api/v1/auth; Max-Age=2592000
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /auth/refresh:
+    post:
+      summary: Rotate token pair
+      description: Validates the refresh token from the cookie, checks for reuse/revocation, and issues a fresh token pair.
+      operationId: refreshToken
+      responses:
+        '200':
+          description: Token rotated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /auth/logout:
+    post:
+      summary: Revoke session
+      description: Invalidates the current refresh token and clears the cookie.
+      operationId: logoutUser
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Successfully logged out
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  # ============================================================================
+  # USERS & PROFILES
+  # ============================================================================
+  /users/me:
+    get:
+      summary: Get authenticated user profile
+      operationId: getCurrentUser
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfile'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    delete:
+      summary: GDPR Right to be Forgotten account deletion
+      description: Permanently purges PII and anonymizes historical rating interactions.
+      operationId: deleteCurrentUser
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [confirmationPassword]
+              properties:
+                confirmationPassword:
+                  type: string
+      responses:
+        '204':
+          description: Account purged and anonymized successfully
+        '403':
+          description: Invalid confirmation password
+
+  /users/me/gdpr-export:
+    get:
+      summary: GDPR Data Portability export
+      description: Streams a password-protected ZIP archive containing full personal data in JSON format.
+      operationId: exportUserData
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: ZIP archive containing data dump
+          content:
+            application/zip:
+              schema:
+                type: string
+                format: binary
+
+  # ============================================================================
+  # MOVIES CATALOG & SEARCH
+  # ============================================================================
+  /movies:
+    get:
+      summary: Browse movie catalog
+      description: Paginated catalog query with faceted filters. Cached at the edge via Cloudflare CDN.
+      operationId: listMovies
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+        - name: genre
+          in: query
+          schema:
+            type: integer
+            description: TMDB genre ID
+        - name: year
+          in: query
+          schema:
+            type: integer
+        - name: sort
+          in: query
+          schema:
+            type: string
+            enum: [popularity, release_date, vote_average, title]
+            default: popularity
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedMovies'
+
+  /movies/{id}:
+    get:
+      summary: Get movie details
+      description: Returns full movie metadata, director, top cast, and genres.
+      operationId: getMovieById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MovieDetail'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /movies/search:
+    get:
+      summary: Search catalog
+      description: High-speed full-text and fuzzy title search.
+      operationId: searchMovies
+      parameters:
+        - name: q
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: fuzzy
+          in: query
+          schema:
+            type: boolean
+            default: true
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MovieSummary'
+
+  /movies/trending:
+    get:
+      summary: Get trending movies
+      description: Returns items scored via time-decayed Bayesian Wilson Score interval.
+      operationId: getTrendingMovies
+      parameters:
+        - name: window
+          in: query
+          schema:
+            type: string
+            enum: [day, week]
+            default: day
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MovieSummary'
+
+  # ============================================================================
+  # RATINGS & REVIEWS
+  # ============================================================================
+  /ratings:
+    post:
+      summary: Submit movie rating
+      description: Rates a movie (1–10) and optionally provides a written review.
+      operationId: createRating
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateRatingRequest'
+      responses:
+        '201':
+          description: Rating created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RatingObject'
+        '409':
+          description: Movie already rated by this user. Use PUT to update.
+
+  /ratings/{movieId}:
+    put:
+      summary: Update existing rating
+      operationId: updateRating
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: movieId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateRatingRequest'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RatingObject'
+    delete:
+      summary: Delete rating
+      operationId: deleteRating
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: movieId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Rating deleted
+
+  # ============================================================================
+  # WATCHLISTS
+  # ============================================================================
+  /watchlists:
+    get:
+      summary: List user watchlists
+      operationId: listWatchlists
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/WatchlistSummary'
+    post:
+      summary: Create new watchlist
+      operationId: createWatchlist
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateWatchlistRequest'
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WatchlistSummary'
+
+  /watchlists/{id}/items:
+    post:
+      summary: Add movie to watchlist
+      operationId: addWatchlistItem
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [movieId]
+              properties:
+                movieId:
+                  type: string
+                  format: uuid
+                priority:
+                  type: integer
+                  default: 0
+      responses:
+        '201':
+          description: Added to watchlist
+
+  # ============================================================================
+  # RECOMMENDATIONS
+  # ============================================================================
+  /recommendations/feed:
+    get:
+      summary: Get personalized recommendation feed
+      description: Generates a hybrid feed combining iALS collaborative filtering, pgvector content-based embeddings, and trending scores via Reciprocal Rank Fusion (RRF).
+      operationId: getRecommendationFeed
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 24
+        - name: diversity
+          in: query
+          schema:
+            type: number
+            format: float
+            default: 0.3
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RecommendedMovie'
+
+  /recommendations/similar/{id}:
+    get:
+      summary: Get similar movies
+      description: Cosine similarity lookup in PostgreSQL using pgvector HNSW index.
+      operationId: getSimilarMovies
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 12
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RecommendedMovie'
+
+  # ============================================================================
+  # TELEMETRY & INTERACTIONS
+  # ============================================================================
+  /interactions/batch:
+    post:
+      summary: Ingest client interaction events
+      description: Asynchronous fire-and-forget ingestion of clicks, trailer views, and impressions for implicit feedback model training.
+      operationId: ingestInteractions
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [events]
+              properties:
+                events:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/InteractionEvent'
+      responses:
+        '202':
+          description: Batch queued for asynchronous ingestion
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  responses:
+    BadRequest:
+      description: Invalid request parameters or body validation error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Unauthorized:
+      description: Missing, invalid, or expired authentication token
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    NotFound:
+      description: Requested entity does not exist
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+
+  schemas:
+    RegisterRequest:
+      type: object
+      required: [email, password, username, displayName]
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          minLength: 8
+        username:
+          type: string
+          pattern: '^[a-zA-Z0-9_]{3,30}$'
+        displayName:
+          type: string
+          maxLength: 100
+
+    LoginRequest:
+      type: object
+      required: [email, password]
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+
+    AuthResponse:
+      type: object
+      properties:
+        accessToken:
+          type: string
+        user:
+          $ref: '#/components/schemas/UserProfile'
+
+    TokenResponse:
+      type: object
+      properties:
+        accessToken:
+          type: string
+
+    UserProfile:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        email:
+          type: string
+        username:
+          type: string
+        displayName:
+          type: string
+        avatarUrl:
+          type: string
+          nullable: true
+        role:
+          type: string
+          enum: [USER, CRITIC, MODERATOR, ADMIN]
+        createdAt:
+          type: string
+          format: date-time
+
+    MovieSummary:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        tmdbId:
+          type: integer
+        title:
+          type: string
+        releaseDate:
+          type: string
+          format: date
+        posterPath:
+          type: string
+          nullable: true
+        voteAverage:
+          type: number
+        voteCount:
+          type: integer
+        popularityScore:
+          type: number
+
+    MovieDetail:
+      allOf:
+        - $ref: '#/components/schemas/MovieSummary'
+        - type: object
+          properties:
+            tagline:
+              type: string
+              nullable: true
+            overview:
+              type: string
+            runtimeMinutes:
+              type: integer
+            genres:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  name:
+                    type: string
+            director:
+              type: string
+              nullable: true
+            topCast:
+              type: array
+              items:
+                type: object
+                properties:
+                  name:
+                    type: string
+                  characterName:
+                    type: string
+
+    PaginatedMovies:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/MovieSummary'
+        meta:
+          type: object
+          properties:
+            totalItems:
+              type: integer
+            currentPage:
+              type: integer
+            totalPages:
+              type: integer
+
+    CreateRatingRequest:
+      type: object
+      required: [movieId, ratingValue]
+      properties:
+        movieId:
+          type: string
+          format: uuid
+        ratingValue:
+          type: integer
+          minimum: 1
+          maximum: 10
+        reviewTitle:
+          type: string
+          maxLength: 150
+          nullable: true
+        reviewBody:
+          type: string
+          nullable: true
+        isSpoiler:
+          type: boolean
+          default: false
+
+    UpdateRatingRequest:
+      type: object
+      properties:
+        ratingValue:
+          type: integer
+          minimum: 1
+          maximum: 10
+        reviewTitle:
+          type: string
+          nullable: true
+        reviewBody:
+          type: string
+          nullable: true
+
+    RatingObject:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        movieId:
+          type: string
+          format: uuid
+        userId:
+          type: string
+          format: uuid
+        ratingValue:
+          type: integer
+        reviewTitle:
+          type: string
+          nullable: true
+        reviewBody:
+          type: string
+          nullable: true
+        helpfulVotes:
+          type: integer
+        createdAt:
+          type: string
+          format: date-time
+
+    WatchlistSummary:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        description:
+          type: string
+          nullable: true
+        isPrivate:
+          type: boolean
+        itemCount:
+          type: integer
+
+    CreateWatchlistRequest:
+      type: object
+      required: [name]
+      properties:
+        name:
+          type: string
+          maxLength: 100
+        description:
+          type: string
+          nullable: true
+        isPrivate:
+          type: boolean
+          default: false
+
+    RecommendedMovie:
+      allOf:
+        - $ref: '#/components/schemas/MovieSummary'
+        - type: object
+          properties:
+            algorithm:
+              type: string
+              enum: [CONTENT_BASED, COLLABORATIVE, HYBRID, TRENDING]
+            similarityScore:
+              type: number
+            explanation:
+              type: string
+              example: "Because you rated Inception 9/10"
+
+    InteractionEvent:
+      type: object
+      required: [movieId, eventType]
+      properties:
+        movieId:
+          type: string
+          format: uuid
+        eventType:
+          type: string
+          enum: [VIEW, WATCHLIST_ADD, RATING_SUBMIT, TRAILER_PLAY, SHARE, DISMISS]
+        dwellTimeSeconds:
+          type: integer
+          default: 0
+        contextMetadata:
+          type: object
+          nullable: true
+
+    ErrorResponse:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+        message:
+          type: string
+        error:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+

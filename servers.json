@@ -1,0 +1,25 @@
+{
+  "Servers": {
+    "1": {
+      "Name": "Movie Rec Database (Direct)",
+      "Group": "Movie Recommendation Platform",
+      "Host": "postgres",
+      "Port": 5432,
+      "MaintenanceDB": "movie_rec_db",
+      "Username": "postgres",
+      "SSLMode": "prefer",
+      "Comment": "Direct connection to PostgreSQL 16 with pgvector support"
+    },
+    "2": {
+      "Name": "Movie Rec PgBouncer (Pooler)",
+      "Group": "Movie Recommendation Platform",
+      "Host": "pgbouncer",
+      "Port": 6432,
+      "MaintenanceDB": "movie_rec_db",
+      "Username": "postgres",
+      "SSLMode": "prefer",
+      "Comment": "High-throughput transaction connection pooler"
+    }
+  }
+}
+
