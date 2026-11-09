@@ -148,17 +148,17 @@ export default function HomePage() {
       {/* 1. DYNAMIC BACKGROUND MOVIE POSTER WALL & MARQUEE CAROUSEL               */}
       {/* ========================================================================= */}
       <div
-        className="absolute top-[-3rem] left-1/2 -translate-x-1/2 w-screen max-w-none overflow-hidden -z-10 pointer-events-none opacity-65 select-none"
+        className="marquee-container absolute top-[-3rem] left-1/2 -translate-x-1/2 w-screen max-w-none overflow-hidden -z-10 pointer-events-none opacity-65 select-none"
         aria-hidden="true"
       >
         <div className="relative w-full h-[880px] overflow-hidden flex flex-col justify-around py-4 rotate-[-1.5deg] scale-105">
           {/* Row 1: Drift Left */}
           {row1.length > 0 && (
-            <div className="flex animate-marquee-slow whitespace-nowrap gap-4 will-change-transform">
+            <div className="marquee-row pointer-events-auto flex animate-marquee-slow whitespace-nowrap gap-4 will-change-transform">
               {[...row1, ...row1].map((movie, idx) => (
                 <div
                   key={`row1-${movie.id}-${idx}`}
-                  className="w-32 sm:w-40 h-48 sm:h-60 rounded-2xl overflow-hidden bg-slate-900/50 shrink-0 border border-white/10 shadow-lg relative"
+                  className="marquee-card w-32 sm:w-40 h-48 sm:h-60 rounded-2xl overflow-hidden bg-slate-900/50 shrink-0 border border-white/10 shadow-lg relative"
                 >
                   <Image
                     src={getPosterUrl(movie.poster_path)}
@@ -177,11 +177,11 @@ export default function HomePage() {
 
           {/* Row 2: Drift Right */}
           {row2.length > 0 && (
-            <div className="flex animate-marquee-reverse whitespace-nowrap gap-4 will-change-transform">
+            <div className="marquee-row pointer-events-auto flex animate-marquee-reverse whitespace-nowrap gap-4 will-change-transform">
               {[...row2, ...row2].map((movie, idx) => (
                 <div
                   key={`row2-${movie.id}-${idx}`}
-                  className="w-32 sm:w-40 h-48 sm:h-60 rounded-2xl overflow-hidden bg-slate-900/50 shrink-0 border border-white/10 shadow-lg relative"
+                  className="marquee-card w-32 sm:w-40 h-48 sm:h-60 rounded-2xl overflow-hidden bg-slate-900/50 shrink-0 border border-white/10 shadow-lg relative"
                 >
                   <Image
                     src={getPosterUrl(movie.poster_path)}
@@ -200,11 +200,11 @@ export default function HomePage() {
 
           {/* Row 3: Drift Left */}
           {row3.length > 0 && (
-            <div className="flex animate-marquee-slow whitespace-nowrap gap-4 will-change-transform">
+            <div className="marquee-row pointer-events-auto flex animate-marquee-slow whitespace-nowrap gap-4 will-change-transform">
               {[...row3, ...row3].map((movie, idx) => (
                 <div
                   key={`row3-${movie.id}-${idx}`}
-                  className="w-32 sm:w-40 h-48 sm:h-60 rounded-2xl overflow-hidden bg-slate-900/50 shrink-0 border border-white/10 shadow-lg relative"
+                  className="marquee-card w-32 sm:w-40 h-48 sm:h-60 rounded-2xl overflow-hidden bg-slate-900/50 shrink-0 border border-white/10 shadow-lg relative"
                 >
                   <Image
                     src={getPosterUrl(movie.poster_path)}
